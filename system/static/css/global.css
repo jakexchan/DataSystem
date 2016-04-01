@@ -1,0 +1,50 @@
+body{
+    min-height: 600px;
+}
+.navbar-color{
+    background-color: #222;
+    border: #080808;
+}
+.navbar-fixed-top{
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-width: 0 0 1px;
+    z-index: 1000;
+    margin-bottom: 0px;
+}
+.project-name{
+    margin-top: 6px;
+    font-size: 1.75em;
+    text-align: center;
+}
+.project-name a{
+    color: #fff;
+    text-decoration: none;
+}
+.sign-input-group{
+    margin-top: 8px;
+    overflow: hidden;
+}
+.home-img{
+    width: 100%;
+    min-height: 600px; 
+}
+.home-img img{
+    max-width: 1080px;
+    max-height: 600px;
+    display: block;
+    margin: 0 auto;
+}
+.status{
+    color: #fff;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 6px;
+    margin-left: 8px;
+    float: right;
+}
+.status a{
+    padding-left: 8px;
+}

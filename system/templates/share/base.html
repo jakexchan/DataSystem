@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
+    {% load staticfiles %}
+    <link href="{% static "css/global.css" %}" rel="stylesheet">
+    {% block style %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-color navbar-fixed-top">
+        <div class="container">
+            <div class="col-md-2 col-md-offset-5">
+                <div class="project-name">
+                    <a href="/">
+                        <span>Data Exploer</span>
+                    </a>
+                </div>
+            </div>
+            {% if button_group %}
+                <div class="col-md-2 col-md-offset-3 sign-input-group">
+                    <a class="btn btn-success" href="/login" role="button">Sign in</a>
+                    <a class="btn btn-default" href="/registe" role="button">Sign up</a>
+                </div>
+            {% elif user.is_authenticated %}
+                <div class="col-md-3 col-md-offset-2 sign-input-group">
+                    <p class='status'>{{ user.username }}<a href="/logout">Sign out</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    {% block script %}{% endblock %}
+</body>
+</html>

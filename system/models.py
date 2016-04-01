@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
-
+from django.contrib.auth.models import UserManager
 from django.db import models
 
 
@@ -52,13 +52,4 @@ class WeiboInfo(models.Model):
         managed = False
         db_table = 'weibo_info'
 
-
-class SystemUser(models.Model):
-    field_id = models.AutoField(db_column='_id', primary_key=True)  # Field renamed because it started with '_'.
-    account = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'system_user'
             

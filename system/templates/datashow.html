@@ -1,0 +1,44 @@
+{% extends 'share/base.html'%}
+
+{% load staticfiles %}
+
+{% block title %}Data Show -Data Exploer{% endblock %}
+
+{% block style %}
+    <link href="{% static "css/datashow.css" %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class='container main'>
+        <div class='col-md-3'>
+            <div class="panel panel-default">
+              <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <span>Database Table Lists</span>
+                </div>
+              <!-- List group -->
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="badge">14</span>
+                        Cras justo odio
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">14</span>
+                        Cras justo odio
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class='col-md-9'>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span>Table view</span>
+                </div>
+              <!-- Table -->
+                <table class="table">
+                ...
+                </table>
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}
