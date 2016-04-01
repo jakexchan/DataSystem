@@ -22,8 +22,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', system_views.index),
-    url(r'^login/', system_views.login),
-    url(r'^registe/', system_views.registe),
-    url(r'^logout/', system_views.logout),
-    url(r'^datashow/', system_views.datashow),
+    url(r'^login/$', system_views.login),
+    url(r'^registe/$', system_views.registe),
+    url(r'^logout/$', system_views.logout),
+    url(r'^datashow/user/(\d+)/$', system_views.user_table, name='user_table'),
+    url(r'^datashow/weibo/(\d+)/$', system_views.weibo_table, name='weibo_table'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

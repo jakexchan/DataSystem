@@ -4,3 +4,20 @@
 .panel-heading span{
     font-weight: bold;
 }
+table{
+    table-layout: fixed;
+    width: 100%;
+}
+.weibo-content, .weibo-client{
+/*    width: 42%;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.analysis-system-btn{
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,103 @@
+{% extends 'share/base.html'%}
+
+{% load staticfiles %}
+
+{% block title %}Data Show -Data Exploer{% endblock %}
+
+{% block style %}
+    <link href="{% static "css/datashow.css" %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class='container main'>
+        <div class='col-md-3'>
+            <div class="panel panel-default">
+              <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <span>Database Table Lists</span>
+                </div>
+              <!-- List group -->
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="badge">{{ user_list_count }}</span>
+                        <a href="/datashow/user/1">Seach User Info</a>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">{{ lists.paginator.count }}</span>
+                        <a href="/datashow/weibo/1">Seach Weibo Info</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span>Data Analysis System</span>
+                </div>
+                <a href='#' class='btn btn-success analysis-system-btn'>Click into...</a>
+            </div>
+        </div>
+        <div class='col-md-9'>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span>Weibo Table View</span>
+                </div>
+              <!-- Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Content</th>
+                                <th>Type</th>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Client</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in lists%}
+                            <tr>
+                                <td>{{ item.u_id }}</td>
+                                <td class='weibo-content'>{{ item.w_content }}</td>
+                                <td>{{ item.w_type }}</td>
+                                <td>{{ item.w_day }}</td>
+                                <td>{{ item.w_time }}</td>
+                                <td class='weibo-client'>{{ item.w_client }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                    </table>
+                    <nav>
+                        <ul class="pager">
+                            {% if lists.has_previous %}
+                            <li><a href="/datashow/weibo/{{lists.previous_page_number}}">Previous</a></li>
+                            {% else %}
+                            <li class='disabled'><a href="#">Previous</a></li>
+                            {% endif %}
+                            <span>{{lists.number}} page/{{ lists.paginator.num_pages }} pages</span>
+                            {% if lists.has_next %}
+                            <li><a href="/datashow/weibo/{{lists.next_page_number}}">Next</a></li>
+                            {% else %}
+                            <li class='disabled'><a href="#">Next</a></li>
+                            {% endif %}
+                            
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+(function(){
+    $('.weibo-content').on('mouseover', function(){
+        $(this).css({ 'white-space': 'normal' });
+    });
+    $('.weibo-content').on('mouseout', function(){
+        $(this).css({ 'white-space': 'nowrap' });
+    });
+}());
+</script>
+{% endblock %}
