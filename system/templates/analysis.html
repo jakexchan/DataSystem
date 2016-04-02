@@ -1,0 +1,60 @@
+{% extends 'share/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Data Analusis -Data Exploer{% endblock %}
+
+{% block style %}
+    <link href="{% static "css/analysis.css" %}" rel="stylesheet">
+{% endblock%}
+
+{% block content %}
+    <div class='container main'>
+        <div class='col-md-3'>
+            <div class="panel panel-default">
+                <div class="panel-heading flip">
+                    <span>User Analysis</span>
+                    <span class="glyphicon glyphicon-chevron-down list-icon-down" aria-hidden="true"></span>
+                </div>
+                <ul class="list-group list-show">
+                    <li class="list-group-item" id='gender-btn'>Weibo-用户性别比例</li>
+                    <li class="list-group-item" id='gender-weibo-btn'>Weibo-微博数量比较</li>
+                    <li class="list-group-item" id='gender-follow-btn'>Weibo-关注数量比较</li>
+                    <li class="list-group-item" id='gender-fans-btn'>Weibo-粉丝数量比较</li>
+                </ul>
+                <div class="panel-heading flip">
+                    <span>Weibo Analysis</span>
+                    <span class="glyphicon glyphicon-chevron-down list-icon-down" aria-hidden="true"></span>
+                </div>
+                <ul class="list-group list-show">
+                    <li class="list-group-item">Cras justo odio</li>
+                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                    <li class="list-group-item">Morbi leo risus</li>
+                    <li class="list-group-item">Porta ac consectetur ac</li>
+                    <li class="list-group-item">Vestibulum at eros</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class='col-md-9'>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span>Charts View</span>
+                </div>
+                <div id='charts-box'>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static "js/echarts.min.js" %}"></script>
+    <script src="{% static "js/macarons.js" %}"></script>
+    <script src="{% static "js/dark.js" %}"></script>
+    <script src="{% static "js/analysis_animate.js" %}"></script>
+    <script src="{% static "js/echarts_example.js" %}"></script>
+    <script src="{% static "js/analysis_charts.js" %}"></script>
+{% endblock %}

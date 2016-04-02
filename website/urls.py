@@ -27,4 +27,9 @@ urlpatterns = [
     url(r'^logout/$', system_views.logout),
     url(r'^datashow/user/(\d+)/$', system_views.user_table, name='user_table'),
     url(r'^datashow/weibo/(\d+)/$', system_views.weibo_table, name='weibo_table'),
+    url(r'^analysis/', system_views.analysis, name='analysis'),
+    url(r'^gender_ratio/$',  system_views.gender_ratio, name='gender_ratio'),
+    url(r'^gender_weibo_count/$',  system_views.gender_weibo_count, name='gender_weibo_count'),
+    url(r'^gender_follow_count/$',  system_views.gender_follow_count, name='gender_follow_count'),
+    url(r'^gender_fans_count/$',  system_views.gender_fans_count, name='gender_fans_count'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
