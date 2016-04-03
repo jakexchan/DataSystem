@@ -131,6 +131,7 @@ def gender_weibo_count(request):
     female_result = weibo_layered(df_female)
 
     result = [{'男': male_result}, {'女': female_result}]
+    conn.close()
     return HttpResponse(json.dumps(result, ensure_ascii=False))
 
 
@@ -155,6 +156,7 @@ def gender_follow_count(request):
     female_result = follow_layered(df_female)
     
     result = [{'男': male_result}, {'女': female_result}]
+    conn.close()
     return HttpResponse(json.dumps(result, ensure_ascii=False))
 
 
@@ -179,4 +181,92 @@ def gender_fans_count(request):
     female_result = fans_layered(df_female)
     
     result = [{'男': male_result}, {'女': female_result}]
+    conn.close()
+    return HttpResponse(json.dumps(result, ensure_ascii=False))
+
+
+@login_required
+def age_distribute(request):
+    conn = link_to_db()
+    # cursor = conn.cursor()
+    # try:
+    #     cursor.execute(""" SELECT (YEAR(CURDATE()) - YEAR(u_birthday))age from user_info having age != '' order by age """)
+    #     #cursor.execute("""select * from user_info""")
+    #     rows = cursor.fetchall()
+    #     print rows
+    # except:
+    #     print 'error'
+    df = pd.read_sql("select * from user_info", conn)
+
+
+    return HttpResponse(json.dumps(rows, ensure_ascii=False))
+
+
+def top_six_client(df):
+    client = df.groupby(['w_client']).size().sort_values(ascending=False)
+    top_six = client[:6]
+    result = dict()
+    for i, value in enumerate(top_six):
+        result[top_six.index[i]] = str(value)
+    return result
+
+@login_required
+def weibo_compare(request):
+    conn = link_to_db()
+    df_original = pd.read_sql("select * from weibo_info where w_type='原创'", conn)
+    df_transmit = pd.read_sql("select * from weibo_info where w_type='转发'", conn)
+
+    original_count = len(df_original)
+    transmit_count = len(df_transmit)
+
+    original_client = top_six_client(df_original)
+    transmit_client = top_six_client(df_transmit)
+    result = [{u'原创':[original_count, original_client]}, {u'转发':[transmit_count, transmit_client]}]
+    conn.close()
+    return HttpResponse(json.dumps(result, ensure_ascii=False))
+
+@login_required
+def client_compare(request):
+    conn = link_to_db()
+    df = pd.read_sql("select * from weibo_info", conn)
+    df_client = df.groupby(['w_client']).size().sort_values(ascending=False)
+    df_client_top_ten = df_client[:10]
+    count = 0
+    result = dict()
+    for i, value in enumerate(df_client_top_ten):
+        if df_client_top_ten.index[i] != '':
+            count += value
+            result[df_client_top_ten.index[i]] = str(value)
+    result[u'总数'] = str(count)
+    conn.close()
+    return HttpResponse(json.dumps(result, ensure_ascii=False))
+
+
+@login_required
+def day_time(request):
+    conn = link_to_db()
+    df = pd.read_sql("select * from weibo_info", conn)
+    day_time = df.loc[:, ['w_day', 'w_time']]
+    result = []
+    for i in range(len(day_time)):
+        result.append([ str(day_time['w_day'][i]), str(day_time['w_time'][i]).split(' ')[2] ])
+    conn.close()
+    return HttpResponse(json.dumps(result, ensure_ascii=False))
+
+
+@login_required
+def weibo_update(request):
+    conn = link_to_db()
+    df = pd.read_sql("select * from weibo_info", conn)
+    df_dt = pd.to_datetime(df['w_day'])
+    days = {0:'周一',1:'周二',2:'周三',3:'周四',4:'周五',5:'周六',6:'周日'}
+    new_arr = []
+    for i in df_dt:
+        new_arr.append(days[i.weekday()])
+    df['week'] = new_arr
+    grouped = df.groupby(by=['week']).size()
+    result = dict()
+    for i, value in enumerate(grouped):
+        result[grouped.index[i]] = str(value)
+    conn.close()
     return HttpResponse(json.dumps(result, ensure_ascii=False))

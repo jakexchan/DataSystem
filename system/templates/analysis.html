@@ -21,15 +21,17 @@
                     <li class="list-group-item" id='gender-weibo-btn'>Weibo-微博数量比较</li>
                     <li class="list-group-item" id='gender-follow-btn'>Weibo-关注数量比较</li>
                     <li class="list-group-item" id='gender-fans-btn'>Weibo-粉丝数量比较</li>
+                    <li class="list-group-item" id='gender-age-distribute'>Weibo-年龄分布情况</li>
                 </ul>
                 <div class="panel-heading flip">
                     <span>Weibo Analysis</span>
                     <span class="glyphicon glyphicon-chevron-down list-icon-down" aria-hidden="true"></span>
                 </div>
                 <ul class="list-group list-show">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Morbi leo risus</li>
+                    <li class="list-group-item" id='client-compare'>Weibo-发布客户端占比</li>
+                    <li class="list-group-item" id='weibo-compare'>Weibo-微博原创与转发对比</li>
+                    <li class="list-group-item" id='weibo-update'>Weibo-每日微博更新频率</li>
+                    <li class="list-group-item" id='day-time'>Weibo-发布日期与时间散点分布</li>
                     <li class="list-group-item">Porta ac consectetur ac</li>
                     <li class="list-group-item">Vestibulum at eros</li>
                 </ul>
@@ -52,7 +54,7 @@
 
 {% block script %}
     <script src="{% static "js/echarts.min.js" %}"></script>
-    <script src="{% static "js/macarons.js" %}"></script>
+    <script src="{% static "js/vintage.js" %}"></script>
     <script src="{% static "js/dark.js" %}"></script>
     <script src="{% static "js/analysis_animate.js" %}"></script>
     <script src="{% static "js/echarts_example.js" %}"></script>
