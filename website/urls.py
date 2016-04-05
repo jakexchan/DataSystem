@@ -37,4 +37,5 @@ urlpatterns = [
     url(r'^client_compare/$',  system_views.client_compare, name='client_compare'),
     url(r'^day_time/$',  system_views.day_time, name='day_time'),
     url(r'^weibo_update/$',  system_views.weibo_update, name='weibo_update'),
+    url(r'^every_day_update/$',  system_views.every_day_update, name='every_day_update'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

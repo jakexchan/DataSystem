@@ -278,15 +278,21 @@ def weibo_update(request):
     df_transmit = weibo_day_update(df_transmit)
 
     result = [{'总体': sum_update}, {'原创': original_update}, {'转发': df_transmit}]
-    # df_dt = pd.to_datetime(df['w_day'])
-    # days = {0:'周一',1:'周二',2:'周三',3:'周四',4:'周五',5:'周六',6:'周日'}
-    # new_arr = []
-    # for i in df_dt:
-    #     new_arr.append(days[i.weekday()])
-    # df['week'] = new_arr
-    # grouped = df.groupby(by=['week']).size()
-    # result = dict()
-    # for i, value in enumerate(grouped):
-    #     result[grouped.index[i]] = str(value)
+    conn.close()
+    return HttpResponse(json.dumps(result, ensure_ascii=False))
+
+
+@login_required
+def every_day_update(request):
+    conn = link_to_db()
+    df = pd.read_sql('select * from weibo_info', conn)
+    df_day = df.groupby(by=['w_day']).size()
+    obj = dict()
+    result = []
+    for i, value in enumerate(df_day):
+        obj = dict()
+        obj[str(df_day.index[i])] = str(value)
+        result.append(obj)
+        del obj
     conn.close()
     return HttpResponse(json.dumps(result, ensure_ascii=False))

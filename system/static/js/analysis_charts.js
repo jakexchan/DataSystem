@@ -1,4 +1,4 @@
-(function(){
+(function() {
     // using jQuery, Django post request, code from django documents
     function getCookie(name) {
         var cookieValue = null;
@@ -33,13 +33,13 @@
         Remove charts view 
         div content function
     */
-    function removeDivContent(){
+    function removeDivContent() {
         $('#charts-box').html('');
     }
 
-
+    //用户性别比例
     //Gender ratio charts
-    $('#gender-btn').click(function(){
+    $('#gender-btn').click(function() {
         removeDivContent();
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
@@ -47,86 +47,86 @@
         $.ajax({
             url: '/gender_ratio/',
             type: 'post',
-            success: function(response){
+            success: function(response) {
                 var data = JSON.parse(response);
                 ec.hideLoading();
                 //Gender ratio option
                 var option = {
-                        title : {
-                            text: '北京理工大学珠海学院\n微博用户性别比例',
-                            x:'center'
-                        },
-                        tooltip : {
-                            trigger: 'item',
-                            formatter: "{a} <br/>{b} : {c} ({d}%)"
-                        },
-                        toolbox:{
-                            show: true,
-                            orient: 'vertical',
-                            feature: {
-                                saveAsImage: {
+                    title: {
+                        text: '北京理工大学珠海学院\n微博用户性别比例',
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    toolbox: {
+                        show: true,
+                        orient: 'vertical',
+                        feature: {
+                            saveAsImage: {
+                                show: true,
+                                title: '用户性别比例'
+                            },
+                            restore: {
+                                show: true
+                            },
+                            dataView: {
+                                show: true
+                            }
+                        }
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: function() {
+                            var list = [];
+                            for (var i in data) {
+                                list.push(i);
+                            }
+                            return list;
+                        }()
+                    },
+                    series: [{
+                        name: 'Gender',
+                        type: 'pie',
+                        radius: '70%',
+                        data: function() {
+                            var list = [];
+                            $.each(data, function(index, value) {
+                                var obj = new Object();
+                                obj.value = parseInt(value);
+                                obj.name = index;
+                                list.push(obj);
+                                obj = null;
+                            });
+                            return list;
+                        }(),
+                        itemStyle: {
+                            normal: {
+                                label: {
                                     show: true,
-                                    title: '用户性别比例'
+                                    formatter: '{b} : {c} ({d}%)'
                                 },
-                                restore: {
+                                labelLine: {
                                     show: true
                                 },
-                                dataView: {
-                                    show: true
-                                }
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }
                         },
-                        legend: {
-                            orient: 'vertical',
-                            left: 'left',
-                            data: function(){
-                                var list = [];
-                                for ( var i in data ){
-                                    list.push(i);
-                                }
-                                return list;
-                            }()
-                        },
-                        series : [
-                            {
-                                name: 'Gender',
-                                type: 'pie',
-                                radius : '70%',
-                                data: function(){
-                                    var list = [];
-                                    $.each(data, function(index, value){
-                                        var obj = new Object();
-                                        obj.value = parseInt(value);
-                                        obj.name = index;
-                                        list.push(obj);
-                                        obj = null;
-                                    });
-                                    return list;
-                                }(),
-                                itemStyle:{ 
-                                    normal:{ 
-                                        label:{ 
-                                            show: true, 
-                                            formatter: '{b} : {c} ({d}%)' 
-                                        }, 
-                                        labelLine :{show:true},
-                                        shadowBlur: 10,
-                                        shadowOffsetX: 0,
-                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                    }
-                                },
-                                roseType:true
-                            }
-                        ]
-                    };  //optin end
+                        roseType: true
+                    }]
+                }; //optin end
 
                 ec.setOption(option);
             }
         });
-    });//Gender ratio charts end
+    }); //Gender ratio charts end
 
-
-    $('#gender-weibo-btn').click(function(){
+    //微博数量比较
+    $('#gender-weibo-btn').click(function() {
         removeDivContent();
         var ec = echarts.init(document.getElementById('charts-box'), 'dark');
         ec.showLoading();
@@ -134,22 +134,22 @@
         $.ajax({
             url: '/gender_weibo_count/',
             type: 'post',
-            success: function(response){
+            success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var labels = ['0-100', '100-1000', '1000-2000', '2000-5000', '5000-10000', '10000以上'];
                 var option = {
-                    title : {
+                    title: {
                         text: '北京理工大学珠海学院\n用户性别与其微博数量比较情况',
-                        x:'left'
+                        x: 'left'
                     },
-                    tooltip : {
+                    tooltip: {
                         trigger: 'axis',
-                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
-                    toolbox:{
+                    toolbox: {
                         show: true,
                         orient: 'vertical',
                         feature: {
@@ -169,10 +169,10 @@
                         }
                     },
                     legend: {
-                        data:function(){
+                        data: function() {
                             var list = [];
-                            for( var i = 0; i < data.length; i++){
-                                for(var index in data[i]){
+                            for (var i = 0; i < data.length; i++) {
+                                for (var index in data[i]) {
                                     list.push(index)
                                 }
                             }
@@ -185,28 +185,24 @@
                         bottom: '3%',
                         containLabel: true
                     },
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : labels
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : function(){
+                    xAxis: [{
+                        type: 'category',
+                        data: labels
+                    }],
+                    yAxis: [{
+                        type: 'value'
+                    }],
+                    series: function() {
                         var list = [];
-                        for(var i = 0; i < data.length; i++){
+                        for (var i = 0; i < data.length; i++) {
                             var obj = new Object();
-                            $.each(data[i], function(index, value){
+                            $.each(data[i], function(index, value) {
                                 obj.name = index;
                                 obj.type = 'bar';
                                 obj.data = [];
-                                for(var j = 0; j < labels.length; j++){
-                                    $.each(value, function(x, y){
-                                        if(x === labels[j]){
+                                for (var j = 0; j < labels.length; j++) {
+                                    $.each(value, function(x, y) {
+                                        if (x === labels[j]) {
                                             obj.data.push(y);
                                         }
                                     });
@@ -224,30 +220,31 @@
         });
     });
 
-    $('#gender-follow-btn').click(function(){
+    //关注数量比较
+    $('#gender-follow-btn').click(function() {
         removeDivContent();
-        var ec = echarts.init(document.getElementById('charts-box'),'vintage');
+        var ec = echarts.init(document.getElementById('charts-box'), 'vintage');
         ec.showLoading();
 
         $.ajax({
             url: '/gender_follow_count/',
             type: 'post',
-            success: function(response){
+            success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var labels = ['0-200', '200-400', '400-600', '600-800', '800-1000', '1000以上'];
                 var option = {
-                    title : {
+                    title: {
                         text: '北京理工大学珠海学院\n用户性别与其关注数量比较情况',
-                        x:'left'
+                        x: 'left'
                     },
-                    tooltip : {
+                    tooltip: {
                         trigger: 'axis',
-                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
-                    toolbox:{
+                    toolbox: {
                         show: true,
                         orient: 'vertical',
                         feature: {
@@ -267,10 +264,10 @@
                         }
                     },
                     legend: {
-                        data:function(){
+                        data: function() {
                             var list = [];
-                            for( var i = 0; i < data.length; i++){
-                                for(var index in data[i]){
+                            for (var i = 0; i < data.length; i++) {
+                                for (var index in data[i]) {
                                     list.push(index)
                                 }
                             }
@@ -283,28 +280,24 @@
                         bottom: '3%',
                         containLabel: true
                     },
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : labels
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : function(){
+                    xAxis: [{
+                        type: 'category',
+                        data: labels
+                    }],
+                    yAxis: [{
+                        type: 'value'
+                    }],
+                    series: function() {
                         var list = [];
-                        for(var i = 0; i < data.length; i++){
+                        for (var i = 0; i < data.length; i++) {
                             var obj = new Object();
-                            $.each(data[i], function(index, value){
+                            $.each(data[i], function(index, value) {
                                 obj.name = index;
                                 obj.type = 'line';
                                 obj.data = [];
-                                for(var j = 0; j < labels.length; j++){
-                                    $.each(value, function(x, y){
-                                        if(x === labels[j]){
+                                for (var j = 0; j < labels.length; j++) {
+                                    $.each(value, function(x, y) {
+                                        if (x === labels[j]) {
                                             obj.data.push(y);
                                         }
                                     });
@@ -322,8 +315,8 @@
         });
     });
 
-
-    $('#gender-fans-btn').click(function(){
+    //粉丝数量比较
+    $('#gender-fans-btn').click(function() {
         removeDivContent();
         var ec = echarts.init(document.getElementById('charts-box'), 'vintage');
         ec.showLoading();
@@ -331,22 +324,22 @@
         $.ajax({
             url: '/gender_fans_count/',
             type: 'post',
-            success: function(response){
+            success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var labels = ['0-500', '500-1000', '1000-3000', '3000-5000', '5000-10000', '10000以上'];
                 var option = {
-                    title : {
+                    title: {
                         text: '北京理工大学珠海学院\n用户性别与其粉丝数量比较情况',
-                        x:'left'
+                        x: 'left'
                     },
-                    tooltip : {
+                    tooltip: {
                         trigger: 'axis',
-                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
-                    toolbox:{
+                    toolbox: {
                         show: true,
                         orient: 'vertical',
                         feature: {
@@ -366,10 +359,10 @@
                         }
                     },
                     legend: {
-                        data:function(){
+                        data: function() {
                             var list = [];
-                            for( var i = 0; i < data.length; i++){
-                                for(var index in data[i]){
+                            for (var i = 0; i < data.length; i++) {
+                                for (var index in data[i]) {
                                     list.push(index)
                                 }
                             }
@@ -382,28 +375,24 @@
                         bottom: '3%',
                         containLabel: true
                     },
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : labels
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-                    series : function(){
+                    xAxis: [{
+                        type: 'category',
+                        data: labels
+                    }],
+                    yAxis: [{
+                        type: 'value'
+                    }],
+                    series: function() {
                         var list = [];
-                        for(var i = 0; i < data.length; i++){
+                        for (var i = 0; i < data.length; i++) {
                             var obj = new Object();
-                            $.each(data[i], function(index, value){
+                            $.each(data[i], function(index, value) {
                                 obj.name = index;
                                 obj.type = 'bar';
                                 obj.data = [];
-                                for(var j = 0; j < labels.length; j++){
-                                    $.each(value, function(x, y){
-                                        if(x === labels[j]){
+                                for (var j = 0; j < labels.length; j++) {
+                                    $.each(value, function(x, y) {
+                                        if (x === labels[j]) {
                                             obj.data.push(y);
                                         }
                                     });
@@ -421,47 +410,61 @@
         });
     });
 
-        /*age*/
-    $('#gender-age-distribute').click(function(){
-            removeDivContent();
-            var ec = echarts.init(document.getElementById('charts-box'));
-            ec.showLoading();
+    //年龄分布情况
+    $('#gender-age-distribute').click(function() {
+        removeDivContent();
+        var ec = echarts.init(document.getElementById('charts-box'));
+        ec.showLoading();
+        // $.ajax({
+        //     url: '/age_distribute/',
+        //     type: 'post',
+        //     success: function(response){
 
-            option = {
-        title : {
-            text: '微博用户年龄层分布',
-            x:'left'
-        },
-        tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-         legend: {
-            x : 'center',
-            y : 'bottom',
-            data:['00s','90s','80s','70s','aother']
-        },
-        toolbox: {
-            show : true,
-            feature : {
-                mark : {show: true},
-                dataView : {show: true, readOnly: false},
-                magicType : {
-                    show: true,
-                    type: ['pie', 'funnel']
-                },
-                restore : {show: true},
-                saveAsImage : {show: true}
-            }
-        },
-        calculable : true,
-        series : [
-            {
-                name:'半径模式',
-                type:'pie',
-                radius : [15, 130],
-                center : ['25%', 200],
-                roseType : 'radius',
+        //     }
+        // });
+        var option = {
+            title: {
+                text: '微博用户年龄层分布',
+                x: 'left'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                x: 'center',
+                y: 'bottom',
+                data: ['00s', '90s', '80s', '70s', 'aother']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {
+                        show: true
+                    },
+                    dataView: {
+                        show: true,
+                        readOnly: false
+                    },
+                    magicType: {
+                        show: true,
+                        type: ['pie', 'funnel']
+                    },
+                    restore: {
+                        show: true
+                    },
+                    saveAsImage: {
+                        show: true
+                    }
+                }
+            },
+            calculable: true,
+            series: [{
+                name: '半径模式',
+                type: 'pie',
+                radius: [15, 130],
+                center: ['25%', 200],
+                roseType: 'radius',
                 label: {
                     normal: {
                         show: false
@@ -478,33 +481,55 @@
                         show: true
                     }
                 },
-                data:[
-                    {value:56, name:'00s'},
-                    {value:621, name:'90s'},
-                    {value:98, name:'80s'},
-                    {value:5, name:'70s'},
-                    {value:604, name:'aother'}
-                ]
-            },
-            {
-                name:'面积模式',
-                type:'pie',
-                radius : [10, 150],
-                center : ['75%', 200],
-                roseType : 'area',
-                data:[
-                    {value:56, name:'00s'},
-                    {value:621, name:'90s'},
-                    {value:98, name:'80s'},
-                    {value:5, name:'70s'},
-                    {value:604, name:'aother'}
-                ]
-            }
-        ]
-    };
+                data: [{
+                    value: 56,
+                    name: '00s'
+                }, {
+                    value: 621,
+                    name: '90s'
+                }, {
+                    value: 98,
+                    name: '80s'
+                }, {
+                    value: 5,
+                    name: '70s'
+                }, {
+                    value: 604,
+                    name: 'aother'
+                }]
+            }, {
+                name: '面积模式',
+                type: 'pie',
+                radius: [10, 150],
+                center: ['75%', 200],
+                roseType: 'area',
+                data: [{
+                    value: 56,
+                    name: '00s'
+                }, {
+                    value: 621,
+                    name: '90s'
+                }, {
+                    value: 98,
+                    name: '80s'
+                }, {
+                    value: 5,
+                    name: '70s'
+                }, {
+                    value: 604,
+                    name: 'aother'
+                }]
+            }]
+        };
+        setTimeout(function() {
+            ec.hideLoading();
+            ec.setOption(option);
+        }, 1000);
 
+    });
 
-    $('#client-compare').click(function(){
+    //发布客户端占比
+    $('#client-compare').click(function() {
         removeDivContent();
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
@@ -512,19 +537,19 @@
         $.ajax({
             url: '/client_compare/',
             type: 'post',
-            success: function(response){
+            success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var option = {
                     title: {
                         text: '北京理工大学珠海学院\n用户发布微博客户端情况',
                     },
-                    tooltip : {
+                    tooltip: {
                         trigger: 'axis',
-                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
                         },
-                        formatter: function (params) {
+                        formatter: function(params) {
                             var tar = params[0];
                             return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
                         }
@@ -536,14 +561,16 @@
                         containLabel: true
                     },
                     xAxis: {
-                        type : 'category',
-                        splitLine: {show:false},
-                        data : function(){
+                        type: 'category',
+                        splitLine: {
+                            show: false
+                        },
+                        data: function() {
                             var list = [];
-                            $.each(data, function(index, value){
-                                if( index=== '总数'){
+                            $.each(data, function(index, value) {
+                                if (index === '总数') {
                                     list.unshift(index);
-                                }else{
+                                } else {
                                     list.push(index);
                                 }
                             });
@@ -551,63 +578,60 @@
                         }()
                     },
                     yAxis: {
-                        type : 'value'
+                        type: 'value'
                     },
-                    series: [
-                        {
-                            name: '',
-                            type: 'bar',
-                            stack:  '总量',
-                            itemStyle: {
-                                normal: {
-                                    barBorderColor: 'rgba(0,0,0,0)',
-                                    color: 'rgba(0,0,0,0)'
-                                },
-                                emphasis: {
-                                    barBorderColor: 'rgba(0,0,0,0)',
-                                    color: 'rgba(0,0,0,0)'
-                                }
+                    series: [{
+                        name: '',
+                        type: 'bar',
+                        stack: '总量',
+                        itemStyle: {
+                            normal: {
+                                barBorderColor: 'rgba(0,0,0,0)',
+                                color: 'rgba(0,0,0,0)'
                             },
-                            data: function(){
-                                var list = [];
-                                sum = parseInt(data['总数']);
-                                f = 0;
-                                $.each(data, function(index, value){
-                                    if(index === '总数'){
-                                        list.unshift(0);
-                                    }else{
-                                       f = sum - parseInt(value);
-                                       list.push(f);
-                                    }
-                                    sum = f;
-                                });
-
-                                return list;
-                            }()
+                            emphasis: {
+                                barBorderColor: 'rgba(0,0,0,0)',
+                                color: 'rgba(0,0,0,0)'
+                            }
                         },
-                        {
-                            name: '客户端类型',
-                            type: 'bar',
-                            stack: '总量',
-                            label: {
-                                normal: {
-                                    show: true,
-                                    position: 'inside'
+                        data: function() {
+                            var list = [];
+                            sum = parseInt(data['总数']);
+                            f = 0;
+                            $.each(data, function(index, value) {
+                                if (index === '总数') {
+                                    list.unshift(0);
+                                } else {
+                                    f = sum - parseInt(value);
+                                    list.push(f);
                                 }
-                            },
-                            data:function(){
-                                var list = [];
-                                $.each(data, function(index, value){
-                                    if( index === '总数'){
-                                        list.unshift(parseInt(value));
-                                    }else{
-                                        list.push(parseInt(value));
-                                    }
-                                });
-                                return list;
-                            }()
-                        }
-                    ]
+                                sum = f;
+                            });
+
+                            return list;
+                        }()
+                    }, {
+                        name: '客户端类型',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'inside'
+                            }
+                        },
+                        data: function() {
+                            var list = [];
+                            $.each(data, function(index, value) {
+                                if (index === '总数') {
+                                    list.unshift(parseInt(value));
+                                } else {
+                                    list.push(parseInt(value));
+                                }
+                            });
+                            return list;
+                        }()
+                    }]
                 };
 
                 ec.setOption(option);
@@ -616,10 +640,8 @@
         });
     });
 
-
-
     //微博原创与转发对比
-    $('#weibo-compare').click(function(){
+    $('#weibo-compare').click(function() {
         removeDivContent();
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
@@ -627,11 +649,11 @@
         $.ajax({
             url: '/weibo_compare/',
             type: 'post',
-            success: function(response){
+            success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var option = {
-                    title:{
+                    title: {
                         text: '北京理工大学珠海学院\n微博类型比例',
                         subtext: '其各自发布微博客户端占比'
                     },
@@ -639,66 +661,64 @@
                         trigger: 'item',
                         formatter: "{a} <br/>{b}: {c} ({d}%)"
                     },
-                    series: [
-                        {
-                            name:'微博类型',
-                            type:'pie',
-                            selectedMode: 'single',
-                            radius: [0, '40%'],
+                    series: [{
+                        name: '微博类型',
+                        type: 'pie',
+                        selectedMode: 'single',
+                        radius: [0, '40%'],
 
-                            label: {
-                                normal: {
-                                    position: 'inner'
-                                }
-                            },
-                            labelLine: {
-                                normal: {
-                                    show: false
-                                }
-                            },
-                            data: function(){
-                                var list = [];
-                                for(var i = 0; i < data.length; i++){
-                                    $.each(data[i], function(n, v){
+                        label: {
+                            normal: {
+                                position: 'inner'
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: function() {
+                            var list = [];
+                            for (var i = 0; i < data.length; i++) {
+                                $.each(data[i], function(n, v) {
+                                    var obj = new Object();
+                                    obj.name = n;
+                                    obj.value = parseInt(v[0]);
+                                    list.push(obj);
+                                    obj = null;
+                                });
+                            }
+                            return list;
+                        }()
+                    }, {
+                        name: '发布客户端类型',
+                        type: 'pie',
+                        radius: ['55%', '75%'],
+                        data: function() {
+                            var list = [];
+                            for (var i = 0; i < data.length; i++) {
+                                $.each(data[i], function(n, client) {
+                                    $.each(client[1], function(client_name, num) {
                                         var obj = new Object();
-                                        obj.name = n;
-                                        obj.value = parseInt(v[0]);
+                                        obj.name = client_name;
+                                        obj.value = parseInt(num);
                                         list.push(obj);
                                         obj = null;
                                     });
-                                } 
-                                return list;
-                            }()
-                        },
-                        {
-                            name:'发布客户端类型',
-                            type:'pie',
-                            radius: ['55%', '75%'],
-                            data: function(){
-                                var list = [];
-                                for(var i = 0; i < data.length; i++){
-                                    $.each(data[i], function(n, client){
-                                        $.each(client[1], function(client_name, num){
-                                            var obj = new Object();
-                                            obj.name = client_name;
-                                            obj.value = parseInt(num);
-                                            list.push(obj);
-                                            obj = null;
-                                        });
-                                    });
-                                }
-                                return list; 
-                            }()
-                        }
-                    ]
+                                });
+                            }
+                            return list;
+                        }()
+                    }]
                 };
                 ec.setOption(option);
             }
         });
 
     });
-    
-    $('#weibo-update').click(function(){
+
+    //每周微博更新频率
+    $('#weibo-update').click(function() {
         removeDivContent();
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
@@ -706,10 +726,10 @@
         $.ajax({
             url: '/weibo_update/',
             type: 'post',
-            success: function(response){
+            success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
-                days = ['周一','周二','周三','周四','周五','周六','周日'];
+                days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
                 var option = {
                     title: {
                         text: '北京理工大学珠海学院\n每日微博更新情况'
@@ -723,18 +743,18 @@
                         bottom: '3%',
                         containLabel: true
                     },
-                    legend:{
-                        data: function(){
+                    legend: {
+                        data: function() {
                             var list = [];
-                            for(var i = 0; i < data.length; i++){
-                                $.each(data[i], function(index, value){
+                            for (var i = 0; i < data.length; i++) {
+                                $.each(data[i], function(index, value) {
                                     list.push(index);
                                 });
                             }
                             return list;
                         }()
                     },
-                    toolbox:{
+                    toolbox: {
                         show: true,
                         orient: 'vertical',
                         feature: {
@@ -760,15 +780,15 @@
                     yAxis: {
                         type: 'value'
                     },
-                    series: function(){
+                    series: function() {
                         var list = [];
-                        for(var i = 0, len = data.length; i < len; i++){
-                            $.each(data[i], function(index, value){
+                        for (var i = 0, len = data.length; i < len; i++) {
+                            $.each(data[i], function(index, value) {
                                 var obj = new Object();
                                 obj.name = index;
                                 obj.type = 'line';
                                 obj.data = [];
-                                for(var j = 0; j < days.length; j++){
+                                for (var j = 0; j < days.length; j++) {
                                     obj.data.push(parseInt(value[days[j]]));
                                 }
                                 list.push(obj);
@@ -783,16 +803,106 @@
         });
     });
 
+    //每日微博发布情况
+    $('#day-time').click(function() {
+        removeDivContent();
+        var ec = echarts.init(document.getElementById('charts-box'));
+        ec.showLoading();
 
-        ec.hideLoading();
-        ec.setOption(option);
-       /* $.ajax({
-            url: '/age_distribute/',
+        $.ajax({
+            url: '/every_day_update/',
             type: 'post',
-            success: function(response){
+            success: function(response) {
+                data = JSON.parse(response);
+                console.log(data)
+                var date = [],
+                    series_data = [];
+                for(var i = 0, len = data.length; i < len; i++){
+                    $.each(data[i], function(index, value){
+                        date.push(index);
+                        series_data.push(parseInt(value));
+                    });
+                }
+                
 
+                var option = {
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    title: {
+                        left: 'center',
+                        text: '北京理工大学珠海学院\n每一天微博发布量折线图',
+                    },
+                    legend: {
+                        top: 'bottom',
+                        data: ['意向']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: {
+                                show: true,
+                                readOnly: false
+                            },
+                            magicType: {
+                                show: true,
+                                type: ['line', 'bar', 'stack', 'tiled']
+                            },
+                            restore: {
+                                show: true
+                            },
+                            saveAsImage: {
+                                show: true
+                            }
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: date
+                    },
+                    yAxis: {
+                        type: 'value',
+                        boundaryGap: [0, '100%']
+                    },
+                    dataZoom: [{
+                        type: 'inside',
+                        start: 0,
+                        end: 10
+                    }, {
+                        start: 0,
+                        end: 10
+                    }],
+                    series: [{
+                        name: '当日微博数量',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        itemStyle: {
+                            normal: {
+                                color: 'rgb(255, 70, 131)'
+                            }
+                        },
+                        areaStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgb(255, 158, 68)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgb(255, 70, 131)'
+                                }])
+                            }
+                        },
+                        data: series_data
+                    }]
+                };
 
+                ec.hideLoading();
+                ec.setOption(option);
             }
-        });*/
+        });
     });
+
 }());
