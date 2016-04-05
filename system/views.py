@@ -253,11 +253,7 @@ def day_time(request):
     conn.close()
     return HttpResponse(json.dumps(result, ensure_ascii=False))
 
-
-@login_required
-def weibo_update(request):
-    conn = link_to_db()
-    df = pd.read_sql("select * from weibo_info", conn)
+def weibo_day_update(df):
     df_dt = pd.to_datetime(df['w_day'])
     days = {0:'周一',1:'周二',2:'周三',3:'周四',4:'周五',5:'周六',6:'周日'}
     new_arr = []
@@ -268,5 +264,29 @@ def weibo_update(request):
     result = dict()
     for i, value in enumerate(grouped):
         result[grouped.index[i]] = str(value)
+    return result
+
+@login_required
+def weibo_update(request):
+    conn = link_to_db()
+    df_sum = pd.read_sql("select * from weibo_info", conn)
+    df_original = pd.read_sql("select * from weibo_info where w_type='原创'", conn)
+    df_transmit = pd.read_sql("select * from weibo_info where w_type='转发'", conn)
+
+    sum_update = weibo_day_update(df_sum)
+    original_update = weibo_day_update(df_original)
+    df_transmit = weibo_day_update(df_transmit)
+
+    result = [{'总体': sum_update}, {'原创': original_update}, {'转发': df_transmit}]
+    # df_dt = pd.to_datetime(df['w_day'])
+    # days = {0:'周一',1:'周二',2:'周三',3:'周四',4:'周五',5:'周六',6:'周日'}
+    # new_arr = []
+    # for i in df_dt:
+    #     new_arr.append(days[i.weekday()])
+    # df['week'] = new_arr
+    # grouped = df.groupby(by=['week']).size()
+    # result = dict()
+    # for i, value in enumerate(grouped):
+    #     result[grouped.index[i]] = str(value)
     conn.close()
     return HttpResponse(json.dumps(result, ensure_ascii=False))

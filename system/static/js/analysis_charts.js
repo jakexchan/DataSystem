@@ -421,6 +421,89 @@
         });
     });
 
+        /*age*/
+    $('#gender-age-distribute').click(function(){
+            removeDivContent();
+            var ec = echarts.init(document.getElementById('charts-box'));
+            ec.showLoading();
+
+            option = {
+        title : {
+            text: '微博用户年龄层分布',
+            x:'left'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+         legend: {
+            x : 'center',
+            y : 'bottom',
+            data:['00s','90s','80s','70s','aother']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {
+                    show: true,
+                    type: ['pie', 'funnel']
+                },
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        series : [
+            {
+                name:'半径模式',
+                type:'pie',
+                radius : [15, 130],
+                center : ['25%', 200],
+                roseType : 'radius',
+                label: {
+                    normal: {
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                lableLine: {
+                    normal: {
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                data:[
+                    {value:56, name:'00s'},
+                    {value:621, name:'90s'},
+                    {value:98, name:'80s'},
+                    {value:5, name:'70s'},
+                    {value:604, name:'aother'}
+                ]
+            },
+            {
+                name:'面积模式',
+                type:'pie',
+                radius : [10, 150],
+                center : ['75%', 200],
+                roseType : 'area',
+                data:[
+                    {value:56, name:'00s'},
+                    {value:621, name:'90s'},
+                    {value:98, name:'80s'},
+                    {value:5, name:'70s'},
+                    {value:604, name:'aother'}
+                ]
+            }
+        ]
+    };
+
+
     $('#client-compare').click(function(){
         removeDivContent();
         var ec = echarts.init(document.getElementById('charts-box'));
@@ -432,7 +515,6 @@
             success: function(response){
                 data = JSON.parse(response);
                 ec.hideLoading();
-                console.log(data);
                 var option = {
                     title: {
                         text: '北京理工大学珠海学院\n用户发布微博客户端情况',
@@ -498,7 +580,6 @@
                                        list.push(f);
                                     }
                                     sum = f;
-                                    console.log(f);
                                 });
 
                                 return list;
@@ -549,8 +630,6 @@
             success: function(response){
                 data = JSON.parse(response);
                 ec.hideLoading();
-                data = JSON.parse(response);
-                console.log(JSON.parse(response));
                 var option = {
                     title:{
                         text: '北京理工大学珠海学院\n微博类型比例',
@@ -608,7 +687,6 @@
                                         });
                                     });
                                 }
-                                console.log(list)
                                 return list; 
                             }()
                         }
@@ -618,76 +696,6 @@
             }
         });
 
-    });
-
-    //Time scatter
-    $('#day-time').click(function(){
-        removeDivContent();
-        var ec = echarts.init(document.getElementById('charts-box'));
-        ec.showLoading();
-
-        $.ajax({
-            url: '/day_time/',
-            type: 'post',
-            success: function(response){
-                data = JSON.parse(response);
-                ec.hideLoading();
-                for( var j =0 ; j < 10; j++){
-                    //new Date(data[j][0].replace(/-/g, "/"))
-                    console.log(new Date(data[j][1]));
-                }
-                var option = {
-                    title : {
-                        text: '男性女性身高体重分布',
-                        subtext: '抽样调查来自: Heinz  2003'
-                    },
-                    tooltip : {
-                        trigger: 'axis',
-                        showDelay : 0,
-                        axisPointer:{
-                            show: true,
-                            type : 'cross',
-                            lineStyle: {
-                                type : 'dashed',
-                                width : 1
-                            }
-                        }
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataZoom : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    xAxis : [
-                        {
-                            type : 'time',
-                            scale:true,
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'time',
-                            scale:true,
-                        }
-                    ],
-                    series : [
-                        {
-                            name:'test',
-                            type:'scatter',
-                            data: data,
-                        }
-                    ]
-                };
-                    
-
-                ec.setOption(option);
-            }
-        });
     });
     
     $('#weibo-update').click(function(){
@@ -704,7 +712,7 @@
                 days = ['周一','周二','周三','周四','周五','周六','周日'];
                 var option = {
                     title: {
-                        text: '北京理工大学珠海学院\n每日微博量'
+                        text: '北京理工大学珠海学院\n每日微博更新情况'
                     },
                     tooltip: {
                         trigger: 'axis'
@@ -714,6 +722,17 @@
                         right: '4%',
                         bottom: '3%',
                         containLabel: true
+                    },
+                    legend:{
+                        data: function(){
+                            var list = [];
+                            for(var i = 0; i < data.length; i++){
+                                $.each(data[i], function(index, value){
+                                    list.push(index);
+                                });
+                            }
+                            return list;
+                        }()
                     },
                     toolbox:{
                         show: true,
@@ -741,103 +760,29 @@
                     yAxis: {
                         type: 'value'
                     },
-                    series: [{
-                        name: '微博量',
-                        type: 'line',
-                        data: function(){
-                            var list = [];
-                            for(var i = 0; i < days.length; i++){
-                                list.push(parseInt(data[days[i]]));
-                            }
-                            return list;
-                        }()
-                    }]
+                    series: function(){
+                        var list = [];
+                        for(var i = 0, len = data.length; i < len; i++){
+                            $.each(data[i], function(index, value){
+                                var obj = new Object();
+                                obj.name = index;
+                                obj.type = 'line';
+                                obj.data = [];
+                                for(var j = 0; j < days.length; j++){
+                                    obj.data.push(parseInt(value[days[j]]));
+                                }
+                                list.push(obj);
+                                obj = null;
+                            });
+                        }
+                        return list;
+                    }()
                 };
                 ec.setOption(option);
             }
         });
     });
-    /*age*/
-    $('#gender-age-distribute').click(function(){
-        removeDivContent();
-        var ec = echarts.init(document.getElementById('charts-box'));
-        ec.showLoading();
 
-        option = {
-    title : {
-        text: '微博用户年龄层分布',
-        x:'left'
-    },
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-     legend: {
-        x : 'center',
-        y : 'bottom',
-        data:['00s','90s','80s','70s','aother']
-    },
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: true},
-            dataView : {show: true, readOnly: false},
-            magicType : {
-                show: true,
-                type: ['pie', 'funnel']
-            },
-            restore : {show: true},
-            saveAsImage : {show: true}
-        }
-    },
-    calculable : true,
-    series : [
-        {
-            name:'半径模式',
-            type:'pie',
-            radius : [15, 130],
-            center : ['25%', 200],
-            roseType : 'radius',
-            label: {
-                normal: {
-                    show: false
-                },
-                emphasis: {
-                    show: true
-                }
-            },
-            lableLine: {
-                normal: {
-                    show: false
-                },
-                emphasis: {
-                    show: true
-                }
-            },
-            data:[
-                {value:56, name:'00s'},
-                {value:621, name:'90s'},
-                {value:98, name:'80s'},
-                {value:5, name:'70s'},
-                {value:604, name:'aother'}
-            ]
-        },
-        {
-            name:'面积模式',
-            type:'pie',
-            radius : [10, 150],
-            center : ['75%', 200],
-            roseType : 'area',
-            data:[
-                {value:56, name:'00s'},
-                {value:621, name:'90s'},
-                {value:98, name:'80s'},
-                {value:5, name:'70s'},
-                {value:604, name:'aother'}
-            ]
-        }
-    ]
-};
 
         ec.hideLoading();
         ec.setOption(option);
