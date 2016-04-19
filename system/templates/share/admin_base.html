@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap -->
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap-table/1.10.1/bootstrap-table.min.css" rel="stylesheet">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/admin_base.css" %}">
+    {% block style %}{% endblock %}
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div id='wrapper'>
+        <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+            <div class="container-fluid">
+                
+                <div class='navbar-header'>
+                    <a class='navbar-brand' href="#">Data Exploer</a>            
+                </div>
+                <div class='pull-right'>
+                    <ul class='nav navbar-nav'>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                {% if user.is_authenticated %}
+                                    <span id='user-name'>{{ user.username }}</span>
+                                {% endif %}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">修改密码</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="/logout">登出</a></li>
+                          </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class='sidebar'>
+            <ul class='list-unstyled sidebar-list'>
+                <li class='sidebar-list-search'>
+                    <div class='input-group'>
+                        <input type="text" class="form-control" placeholder="Search for...">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                        </span>
+                    </div>
+                </li>
+                <li class='sidebar-list-title'>
+                    <a href="/manage/user">User Management</a>
+                </li>
+                <li class='sidebar-list-title'>
+                    <a href="#">Menu Management</a>
+                </li>
+                <li class='sidebar-list-title'>
+                    <a href="#">Message</a>
+                </li>
+            </ul>
+        </div><!--sidebar end-->
+        <div id='page-wrapper'>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+</body>
+</html>

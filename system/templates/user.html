@@ -1,0 +1,59 @@
+{% extends 'share/admin_base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}User Management -Data Exploer{% endblock %}
+
+{% block content %}
+    <div class='row'>
+        <div class='col-md-12'>
+            <h2 class='page-head'>User Management</h2>
+        </div>
+        <div class='col-md-12'>
+            <div class='panel panel-default search-result-panel'>
+                <div class='panel-body'>
+                    <div id="toolbar" class="btn-group">
+                        <button type="button" class="btn btn-default">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </button>
+                    </div>
+                    <table data-toggle="table" data-height="500" data-search="true" data-show-refresh="true" data-show-columns="true" data-toolbar="#toolbar" data-click-to-select="true">
+                        <thead>
+                            <th data-field="state" data-checkbox="true"></th>
+                            <th data-field="id">Id</th>
+                            <th data-field="username">User Name</th>
+                            <th data-field="email">Email</th>
+                            <th data-field="sex">Sex</th>
+                            <th data-field="date_joined">Join Date</th>
+                            <th data-field="last_login">Last Login</th>
+                            <th data-field="profile">Permissions</th>
+                            <th>Operation</th>
+                        </thead>
+                        <tbody>
+                            {% for item in rows %}
+                            <tr>
+                                <td data-field="state" data-checkbox="true"></td>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.username }}</td>
+                                <td>{{ item.email }}</td>
+                                <td>{{ item.sex }}</td>
+                                <td>{{ item.date_joined }}</td>
+                                <td>{{ item.last_login }}</td>
+                                <td>{{ item.profile }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-default btn-sm">
+                                        <i class="glyphicon glyphicon-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
