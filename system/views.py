@@ -200,6 +200,27 @@ def gender_fans_count(request):
 
 
 @login_required
+def fans_with_weibo(request):
+    conn = link_to_db()
+    df_male = pd.read_sql("select * from user_info where u_sex='男'", conn)
+    df_female = pd.read_sql("select * from user_info where u_sex='女'", conn)
+
+    male_result = df_male[['u_weibo_count', 'u_fans']]
+    female_result = df_female[['u_weibo_count', 'u_fans']]
+
+    male_datas = []
+    female_datas = []
+    for male_index, male_row in male_result.iterrows():
+        male_datas.append([male_row['u_fans'], male_row['u_weibo_count']])
+
+    for female_index, female_row in female_result.iterrows():
+        female_datas.append([female_row['u_fans'], female_row['u_weibo_count']])
+
+    result = {'男': male_datas, '女': female_datas}
+    conn.close()
+    return HttpResponse(json.dumps(result, ensure_ascii=False))
+
+@login_required
 def age_distribute(request):
     conn = link_to_db()
     # cursor = conn.cursor()
@@ -336,4 +357,33 @@ def high_word(request):
         else:
             result[word] += 1
     result = sorted(result.iteritems(), key=lambda d:d[1], reverse=True)
-    return HttpResponse(json.dumps(result[:10], ensure_ascii=False))
+    datas = []
+    weight = 15
+    for item in result[:50]:
+        datas.append({'text': item[0], 'weight': weight })
+        weight -= 0.5
+    return HttpResponse(json.dumps(datas, ensure_ascii=False))
+
+
+@login_required
+def hot_tags(request):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+    conn = link_to_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT u_tags FROM user_info")
+    rows = cursor.fetchall()
+    fw = open('tags.txt', 'w')
+    fw.truncate()
+    for row in rows:
+        fw.write(row[0])
+        fw.write('\n')
+    fw.close()
+    content = open('tags.txt', 'r').read()
+    tags = jieba.analyse.extract_tags(content, topK=40)
+    datas = []
+    weight = 30
+    for item in tags:
+        datas.append({'text': item, 'weight': weight })
+        weight -= 0.5
+    return HttpResponse(json.dumps(datas, ensure_ascii=False))

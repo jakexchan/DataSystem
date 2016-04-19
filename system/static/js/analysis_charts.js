@@ -814,7 +814,6 @@
             type: 'post',
             success: function(response) {
                 data = JSON.parse(response);
-                console.log(data)
                 var date = [],
                     series_data = [];
                 for(var i = 0, len = data.length; i < len; i++){
@@ -905,15 +904,167 @@
         });
     });
 
-    //微博内容高频词汇
-    $('#high-word').click(function(){
+    //粉丝数量与微博数量
+    $('#fans-with-weibo').click(function(){
+        removeDivContent();
+        var ec = echarts.init(document.getElementById('charts-box'));
+        ec.showLoading();
+
         $.ajax({
-            url: '/high_word/',
+            url: '/fans_with_weibo/',
             type: 'post',
             success: function(response){
-                console.log(response);
+                var datas = JSON.parse(response);
+                var option = {
+                        title : {
+                            text: '粉丝数量与微博数量散点图',
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                                mark : {show: true},
+                                dataZoom : {show: true},
+                                dataView : {show: true, readOnly: false},
+                                restore : {show: true},
+                                saveAsImage : {show: true}
+                            }
+                        },
+                        tooltip : {
+                            trigger: 'axis',
+                            showDelay : 0,
+                            formatter : function (params) {
+                                if (params.value.length > 1) {
+                                    return params.seriesName + ' :<br/>'
+                                       + '微博数:' + params.value[0] + '<br/>'
+                                       + '粉丝数:' + params.value[1];
+                                }
+                                else {
+                                    return params.seriesName + ' :<br/>'
+                                       + params.name + ' : '
+                                       + params.value;
+                                }
+                            },
+                            axisPointer:{
+                                show: true,
+                                type : 'cross',
+                                lineStyle: {
+                                    type : 'dashed',
+                                    width : 1
+                                }
+                            }
+                        },
+                        legend: {
+                            data: ['女性','男性'],
+                            left: 'center'
+                        },
+                        xAxis : [
+                            {
+                                type : 'value',
+                                scale:true,
+                                axisLabel : {
+                                    formatter: '{value}'
+                                },
+                                splitLine: {
+                                    lineStyle: {
+                                        type: 'dashed'
+                                    }
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                scale:true,
+                                axisLabel : {
+                                    formatter: '{value}'
+                                },
+                                splitLine: {
+                                    lineStyle: {
+                                        type: 'dashed'
+                                    }
+                                }
+                            }
+                        ],
+                        series : [
+                            {
+                                name:'女性',
+                                type:'scatter',
+                                data: datas['女'],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name:'男性',
+                                type:'scatter',
+                                data: datas['男'],
+                                markPoint : {
+                                    data : [
+                                        {type : 'max', name: '最大值'},
+                                        {type : 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine : {
+                                    data : [
+                                        {type : 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                };
+
+                ec.hideLoading();
+                ec.setOption(option);
             }
         });
     });
 
+    //微博内容高频词汇
+    $('#high-word').click(function(){
+        removeDivContent();
+        $.ajax({
+            url: '/high_word/',
+            type: 'post',
+            success: function(response){
+                datas = JSON.parse(response);
+                $('#charts-box').jQCloud(datas, {
+                  delay: 50
+                });
+                $('#charts-box').jQCloud('update', datas);
+            }
+        });
+    });
+
+    //热门标签
+    $('#hot-tags').click(function(){
+        removeDivContent();
+        $.ajax({
+            url: '/hot_tags/',
+            type: 'post',
+            success: function(response){
+                console.log(JSON.parse(response));
+                datas = JSON.parse(response);
+                $('#charts-box').jQCloud(datas, {
+                  delay: 50
+                });
+                $('#charts-box').jQCloud('update', datas);
+            }
+        });
+    });
+
+    
 }());

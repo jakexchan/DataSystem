@@ -6,6 +6,7 @@
 
 {% block style %}
     <link href="{% static "css/analysis.css" %}" rel="stylesheet">
+    <link href="{% static "css/jqcloud.min.css" %}" rel="stylesheet">
 {% endblock%}
 
 {% block content %}
@@ -21,7 +22,9 @@
                     <li class="list-group-item" id='gender-weibo-btn'>Weibo-微博数量比较</li>
                     <li class="list-group-item" id='gender-follow-btn'>Weibo-关注数量比较</li>
                     <li class="list-group-item" id='gender-fans-btn'>Weibo-粉丝数量比较</li>
+                    <li class="list-group-item" id='fans-with-weibo'>Weibo-粉丝数量与微博数量</li>
                     <li class="list-group-item" id='gender-age-distribute'>Weibo-年龄分布情况</li>
+                    <li class="list-group-item" id='hot-tags'>Weibo-热门标签</li>
                 </ul>
                 <div class="panel-heading flip">
                     <span>Weibo Analysis</span>
@@ -58,4 +61,5 @@
     <script src="{% static "js/analysis_animate.js" %}"></script>
     <script src="{% static "js/echarts_example.js" %}"></script>
     <script src="{% static "js/analysis_charts.js" %}"></script>
+    <script src="{% static "js/jqcloud.min.js" %}"></script>
 {% endblock %}
