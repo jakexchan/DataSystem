@@ -7,10 +7,14 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.decorators.csrf import csrf_exempt
+from django.db import connection
 import forms
 import MySQLdb
 import pandas as pd
 import numpy
+import jieba
+import sys
+import jieba.analyse
 from django.conf import settings
 from models import UserInfo, WeiboInfo
 import json
@@ -29,7 +33,10 @@ def login(request):
         if user is not None: 
             if user.is_active:
                 auth.login(request, user)
-                return HttpResponseRedirect('/datashow/user/1')
+                if username == 'admin':
+                    return HttpResponseRedirect('/manage/user/')
+                else:
+                    return HttpResponseRedirect('/datashow/user/1')
         else:
             form = forms.LoginForm()
             return render(request, 'login.html', {'error': 'Account or password incorrect.', 'form': form})
@@ -45,6 +52,13 @@ def registe(request):
         email = request.POST['email']
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
+        cursor = connection.cursor()
+        cursor.execute("""SELECT id
+            FROM auth_user
+            WHERE username=%s""", [username])
+        row = cursor.fetchone()
+        cursor.execute("""INSERT INTO user_profile(profile, user_id)
+            VALUES(%s,%s)""", ['普通用户', row[0]])
         new_user = auth.authenticate(username=username, password=password)
         if new_user is not None:
             auth.login(request, new_user)
@@ -296,3 +310,30 @@ def every_day_update(request):
         del obj
     conn.close()
     return HttpResponse(json.dumps(result, ensure_ascii=False))
+
+
+@login_required
+def high_word(request):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+    conn = link_to_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT w_content FROM weibo_info")
+    rows = cursor.fetchall()
+    fw = open('weibo.txt', 'w')
+    fw.truncate()
+    for row in rows:
+        fw.write(row[0])
+        fw.write('\n')
+    fw.close()
+    content = open('weibo.txt', 'r').read()
+    # tags = jieba.analyse.extract_tags(content, topK=10)
+    words = [ word for word in jieba.cut(content, cut_all=True) if len(word) >= 2 ]
+    result = dict()
+    for word in words:
+        if result.get(word) is None:
+            result[word] = 1
+        else:
+            result[word] += 1
+    result = sorted(result.iteritems(), key=lambda d:d[1], reverse=True)
+    return HttpResponse(json.dumps(result[:10], ensure_ascii=False))

@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 from django.contrib.auth.models import UserManager
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -52,4 +53,21 @@ class WeiboInfo(models.Model):
         managed = False
         db_table = 'weibo_info'
 
-            
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    sex = models.CharField(max_length=50, null=True)
+    profile = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'user_profile'
+
+
+class Permissions(models.Model):
+    field_id = models.AutoField(db_column='_id', primary_key=True)
+    name = models.CharField(max_length=100)
+    
+    class Meta:
+        managed = False
+        db_table = 'permissions'

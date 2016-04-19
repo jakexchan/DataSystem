@@ -26,7 +26,7 @@
                 </div>
             {% elif user.is_authenticated %}
                 <div class="col-md-3 col-md-offset-2 sign-input-group">
-                    <p class='status'>{{ user.username }}<a href="/logout">Sign out</a></p>
+                    <p class='status' id='user' index='{{ user.id }}'>{{ user.username }}<a href="/logout">Sign out</a></p>
                 </div>
             {% endif %}
         </div>

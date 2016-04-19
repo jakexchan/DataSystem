@@ -1,0 +1,131 @@
+{% extends 'share/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Weibo Spider{% endblock %}
+
+{% block style %}
+    <link href="{% static "css/spider.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class='header'>
+    <div class='container'>
+        <h1 class='spider-title'>Welcome to weibo spider!</h1>
+    </div>
+</div>
+<div class='container option-form'>
+    <ul class='list-unstyled col-md-6 col-md-offset-1'>
+        <h3>Base Options</h3>
+        <li>
+            <div class="input-group">
+                <span class="input-group-addon">Options Name</span>
+                <input type="text" class="form-control option" placeholder="Options Name" id="options-name" disabled="true" disabled="true">
+            </div>
+        </li>
+        <li class='divider'></li>
+        <li>
+            <div class="input-group">
+                <span class="input-group-addon">URL</span>
+                <input type="text" class="form-control option" placeholder="URL" id="url" disabled="true">
+            </div>
+        </li>
+        <li class='divider'></li>
+        <li>
+            <div class="input-group">
+                <span class="input-group-addon">Keyword</span>
+                <input type="text" class="form-control option" placeholder="Keyword" id="keyword" disabled="true">
+            </div>
+        </li>
+        <li class='divider'></li>
+        <li>
+            <div class="input-group">
+                <span class="input-group-addon">Download Delay</span>
+                <input type="text" class="form-control option" placeholder="Download Delay" id="download-delay" disabled="true">
+            </div>
+        </li>
+        <li class='divider'></li>
+        <li>
+            <div class="input-group">
+                <span class="input-group-addon">Begin Page Number</span>
+                <input type="text" class="form-control option" placeholder="Begin Page Number" id="begin-page-num" disabled="true">
+            </div>
+        </li>
+        <li class='divider'></li>
+        <li>
+            <div class="input-group">
+                <span class="input-group-addon" >End Page Number</span>
+                <input type="text" class="form-control option" placeholder="End Page Number" id="end-page-num" disabled="true">
+            </div>
+        </li>
+        <li class='divider'></li>
+        <h3>Cookies Options</h3>
+        <li class='cookies'>
+            <div class="input-group">
+                <span class="input-group-addon" >_T_WM</span>
+                <input type="text" class="form-control option" placeholder="_T_WM" id="_T_WM" disabled="true">
+            </div>
+        </li>
+        <li class='cookies'>
+            <div class="input-group">
+                <span class="input-group-addon">SUHB</span>
+                <input type="text" class="form-control option" placeholder="SUHB" id="SUHB" disabled="true">
+            </div>
+        </li>
+        <li class='cookies'>
+            <div class="input-group">
+                <span class="input-group-addon" >SUB</span>
+                <input type="text" class="form-control option" placeholder="SUB" id="SUB" disabled="true">
+            </div>
+        </li>
+        <li class='cookies'>
+            <div class="input-group">
+                <span class="input-group-addon">gsid_CTandWM</span>
+                <input type="text" class="form-control option" placeholder="gsid_CTandWM" id="gsid_CTandWM" disabled="true">
+            </div>
+        </li>
+        <li class='divider'></li>
+        <button type='button' id='save-option'>Save Options</button>
+    </ul>
+    <div class='col-md-5 action-box'>
+        <h4>My Options</h4>
+        <select class='form-control' id='select-options'>
+            {% for item in rows%}
+            <option>{{ item.option_name }}</option>
+            {% endfor %}
+        </select>
+        <button type='button' id='get-option'>Read Options</button>
+        <button type='button' id='edit-option'>Edit Options</button>
+        <button type='button' id='begin-crawl'>Begin Crawl</button>
+
+        <div id='crawl-status-box'>
+            <div class='status-msg'>
+                <div class='success-circle'></div>
+                <div class='running-tips'>Spider is running...</div>
+            </div>
+            <div class='stop-btn-box'>
+                <button type='button' id='stop-crawl'>Stop Running</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" id='msg-modal' tabindex="-1" role="dialog" aria-labelledby="MessageModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Message</h4>
+            </div>
+            <div class="modal-body" id='msg'>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static "js/spider.js" %}"></script>
+{% endblock %}

@@ -905,4 +905,15 @@
         });
     });
 
+    //微博内容高频词汇
+    $('#high-word').click(function(){
+        $.ajax({
+            url: '/high_word/',
+            type: 'post',
+            success: function(response){
+                console.log(response);
+            }
+        });
+    });
+
 }());

@@ -16,11 +16,19 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from system import views as system_views
+from system import admin_views as system_admin_views
 from django.conf import settings
 from django.conf.urls.static import static
+from spider import views as spider_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^spider/$', spider_views.spider_index),
+    url(r'^get_options/$', spider_views.get_options, name='get_options'),
+    url(r'^save/$', spider_views.save, name='save'),
+    url(r'^crawl/$', spider_views.crawl, name='crawl'),
+    url(r'^process_status/$', spider_views.process_status, name='process_status'),
+    url(r'^stop_crawl/$', spider_views.stop_crawl, name='stop_crawl'),
     url(r'^$', system_views.index),
     url(r'^login/$', system_views.login),
     url(r'^registe/$', system_views.registe),
@@ -38,4 +46,6 @@ urlpatterns = [
     url(r'^day_time/$',  system_views.day_time, name='day_time'),
     url(r'^weibo_update/$',  system_views.weibo_update, name='weibo_update'),
     url(r'^every_day_update/$',  system_views.every_day_update, name='every_day_update'),
+    url(r'^high_word/$',  system_views.high_word, name='high_word'),
+    url(r'^manage/user/$',  system_admin_views.user, name='user'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
