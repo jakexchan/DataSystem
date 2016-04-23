@@ -95,7 +95,7 @@
             },
             success: function(response){
                 $('#options-name').val(response.option_name);
-                $('#options-name').attr('title', response._id);
+                $('#options-name').attr('title', response.id);
                 $('#keyword').val(response.keyword);
                 $('#download-delay').val(response.delay);
                 $('#begin-page-num').val(response.begin_page);
@@ -127,7 +127,7 @@
     });
 
     $('#save-option').on('click', function(){
-        var _id = $('#options-name').attr('title'),
+        var id = $('#options-name').attr('title'),
             optionsName = $('#options-name').val(),
             keyword = $('#keyword').val(),
             delay = $('#download-delay').val(),
@@ -143,7 +143,7 @@
             url: '/save/',
             type: 'POST',
             data: {
-                '_id': _id,
+                'id': id,
                 'optionsName': optionsName,
                 'keyword': keyword,
                 'delay': delay,
@@ -160,6 +160,10 @@
                     $('#msg').html('');
                     $('#msg').append('<p>Save Success!</p>');
                     $('#msg-modal').modal('show');
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 1000);
+                    
                 }else{
                     $('#msg').html('');
                     $('#msg').append('<p>Save Fail!</p>');
@@ -194,13 +198,13 @@
     }
 
     $('#begin-crawl').on('click', function(){
-        var _id = $('#options-name').attr('title');
+        var id = $('#options-name').attr('title');
 
         $.ajax({
             url: '/crawl/',
             type: 'POST',
             data: {
-                '_id': _id,
+                'id': id,
             },
             success: function(response){
                 $('#crawl-status-box').show();

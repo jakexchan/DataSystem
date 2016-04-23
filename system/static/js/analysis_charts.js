@@ -34,9 +34,18 @@
         div content function
     */
     function removeDivContent() {
-        $('#charts-box').html('');
+        $('#charts-box').empty();
     }
 
+    function returnSelectValue(){
+        var sel_val = $('#select-project').val();
+        return sel_val;
+    }
+
+    function returnSelectText(){
+        var sel_text = $('#select-project').find('option:selected').text();
+        return sel_text;
+    }
     //用户性别比例
     //Gender ratio charts
     $('#gender-btn').click(function() {
@@ -44,16 +53,22 @@
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/gender_ratio/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response) {
                 var data = JSON.parse(response);
                 ec.hideLoading();
                 //Gender ratio option
                 var option = {
                     title: {
-                        text: '北京理工大学珠海学院\n微博用户性别比例',
+                        text: text + '\n微博用户性别比例',
                         x: 'center'
                     },
                     tooltip: {
@@ -131,16 +146,22 @@
         var ec = echarts.init(document.getElementById('charts-box'), 'dark');
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/gender_weibo_count/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var labels = ['0-100', '100-1000', '1000-2000', '2000-5000', '5000-10000', '10000以上'];
                 var option = {
                     title: {
-                        text: '北京理工大学珠海学院\n用户性别与其微博数量比较情况',
+                        text: text + '\n用户性别与其微博数量比较情况',
                         x: 'left'
                     },
                     tooltip: {
@@ -226,16 +247,22 @@
         var ec = echarts.init(document.getElementById('charts-box'), 'vintage');
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/gender_follow_count/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var labels = ['0-200', '200-400', '400-600', '600-800', '800-1000', '1000以上'];
                 var option = {
                     title: {
-                        text: '北京理工大学珠海学院\n用户性别与其关注数量比较情况',
+                        text: text + '\n用户性别与其关注数量比较情况',
                         x: 'left'
                     },
                     tooltip: {
@@ -321,16 +348,22 @@
         var ec = echarts.init(document.getElementById('charts-box'), 'vintage');
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/gender_fans_count/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var labels = ['0-500', '500-1000', '1000-3000', '3000-5000', '5000-10000', '10000以上'];
                 var option = {
                     title: {
-                        text: '北京理工大学珠海学院\n用户性别与其粉丝数量比较情况',
+                        text: text + '\n用户性别与其粉丝数量比较情况',
                         x: 'left'
                     },
                     tooltip: {
@@ -534,15 +567,21 @@
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/client_compare/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var option = {
                     title: {
-                        text: '北京理工大学珠海学院\n用户发布微博客户端情况',
+                        text: text + '\n用户发布微博客户端情况',
                     },
                     tooltip: {
                         trigger: 'axis',
@@ -646,15 +685,21 @@
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/weibo_compare/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 var option = {
                     title: {
-                        text: '北京理工大学珠海学院\n微博类型比例',
+                        text: text + '\n微博类型比例',
                         subtext: '其各自发布微博客户端占比'
                     },
                     tooltip: {
@@ -723,16 +768,22 @@
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/weibo_update/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response) {
                 data = JSON.parse(response);
                 ec.hideLoading();
                 days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
                 var option = {
                     title: {
-                        text: '北京理工大学珠海学院\n每日微博更新情况'
+                        text: text + '\n每日微博更新情况'
                     },
                     tooltip: {
                         trigger: 'axis'
@@ -809,9 +860,15 @@
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/every_day_update/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response) {
                 data = JSON.parse(response);
                 var date = [],
@@ -830,7 +887,7 @@
                     },
                     title: {
                         left: 'center',
-                        text: '北京理工大学珠海学院\n每一天微博发布量折线图',
+                        text: text + '\n每一天微博发布量折线图',
                     },
                     legend: {
                         top: 'bottom',
@@ -910,14 +967,20 @@
         var ec = echarts.init(document.getElementById('charts-box'));
         ec.showLoading();
 
+        var value = returnSelectValue(),
+            text = returnSelectText();
+
         $.ajax({
             url: '/fans_with_weibo/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response){
                 var datas = JSON.parse(response);
                 var option = {
                         title : {
-                            text: '粉丝数量与微博数量散点图',
+                            text: text + '\n粉丝数量与微博数量散点图',
                         },
                         grid: {
                             left: '3%',
@@ -1036,9 +1099,14 @@
     //微博内容高频词汇
     $('#high-word').click(function(){
         removeDivContent();
+        var value = returnSelectValue();
+
         $.ajax({
             url: '/high_word/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response){
                 datas = JSON.parse(response);
                 $('#charts-box').jQCloud(datas, {
@@ -1052,11 +1120,15 @@
     //热门标签
     $('#hot-tags').click(function(){
         removeDivContent();
+        var value = returnSelectValue();
+
         $.ajax({
             url: '/hot_tags/',
             type: 'post',
+            data: {
+                'id': value
+            },
             success: function(response){
-                console.log(JSON.parse(response));
                 datas = JSON.parse(response);
                 $('#charts-box').jQCloud(datas, {
                   delay: 50

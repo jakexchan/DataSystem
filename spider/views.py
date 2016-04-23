@@ -57,6 +57,7 @@ def create_options(request):
             cursor.execute("""INSERT INTO spider_options(option_name, keyword, delay, begin_page, end_page, user_id, cookies_T_WM, cookies_SUHB, cookies_SUB, cookies_gsid_CTandWM, user_table_name, weibo_table_name)
                 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (options_name, keyword, int(delay), int(beginPage), int(endPage), int(user_id), t_wm, suhb, sub, gsid_CTandWM, user_table, weibo_table))
+
             cursor.execute("""CREATE TABLE """ + user_table +"""(
                   _id INT NOT NULL AUTO_INCREMENT,
                   u_id VARCHAR(50) NOT NULL UNIQUE,
@@ -82,6 +83,7 @@ def create_options(request):
                   w_client VARCHAR(100),
                   PRIMARY KEY (_id)
                 )ENGINE=MyISAM DEFAULT CHARSET=utf8;""")
+
             conn.commit()
             result = True
         except:
@@ -94,7 +96,7 @@ def create_options(request):
 
 def save(request):
     if request.method == 'POST':
-        _id = request.POST['_id']
+        _id = request.POST['id']
         options_name = request.POST['optionsName']
         keyword = request.POST['keyword']
         delay = request.POST['delay']
@@ -114,7 +116,7 @@ def save(request):
         try:
             cursor.execute("""UPDATE spider_options s
                 SET s.option_name=%s, s.keyword=%s, s.delay=%s, s.begin_page=%s, s.end_page=%s, s.cookies_T_WM=%s, s.cookies_SUHB=%s, s.cookies_SUB=%s, s.cookies_gsid_CTandWM=%s
-                WHERE s._id=%s""", (options_name, keyword, int(delay), int(beginPage), int(endPage), t_wm, suhb, sub, gsid_CTandWM, _id))
+                WHERE s.id=%s""", (options_name, keyword, int(delay), int(beginPage), int(endPage), t_wm, suhb, sub, gsid_CTandWM, int(_id)))
             result = True
             conn.commit()
         except:
@@ -144,12 +146,12 @@ def get_options(request):
 def crawl(request):
     global child
     if request.method == 'POST':
-        _id = request.POST['_id']
+        _id = request.POST['id']
 
         conn = lint_to_db()
         cursor = conn.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("""SELECT * FROM spider_options
-            WHERE _id = %s""", [int(_id)])
+            WHERE id = %s""", [int(_id)])
         row = cursor.fetchone()
         cursor.close()
         print row

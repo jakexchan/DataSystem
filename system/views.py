@@ -100,12 +100,6 @@ def weibo_table(request, page):
         lists = paginator.page(paginator.num_pages)
     return render(request, 'weiboshow.html', { 'lists': lists, 'user_list_count': len(all_user_lists)})
 
-
-@login_required
-def analysis(request):
-    return render(request, 'analysis.html')
-
-
 def link_to_db():
     db_arg = settings.DATABASES['default']
     conn = MySQLdb.connect(host=db_arg['HOST'], port=int(db_arg['PORT']), user=db_arg['USER'], passwd=db_arg['PASSWORD'], db=db_arg['NAME'], charset='utf8')
@@ -113,9 +107,36 @@ def link_to_db():
 
 
 @login_required
-def gender_ratio(request):
+def analysis(request):
     conn = link_to_db()
-    df = pd.read_sql('select * from user_info', conn)
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("""SELECT * FROM spider_options""")
+    rows = cursor.fetchall()
+    conn.close()
+    return render(request, 'analysis.html', {"rows": rows})
+
+def user_table_name(_id, conn):
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("""SELECT user_table_name FROM spider_options
+        WHERE id=%s""", [int(_id)])
+    row = cursor.fetchone()
+    return row['user_table_name']
+
+
+def weibo_table_name(_id, conn):
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("""SELECT weibo_table_name FROM spider_options
+        WHERE id=%s""", [int(_id)])
+    row = cursor.fetchone()
+    return row['weibo_table_name']
+
+
+@login_required
+def gender_ratio(request):
+    _id = request.POST['id']
+    conn = link_to_db()
+    table_name = user_table_name(_id, conn)
+    df = pd.read_sql('SELECT * FROM ' + table_name, conn)
     gender = df.groupby(['u_sex']).size()
     result = dict()
     for i, value in enumerate(gender):
@@ -137,9 +158,11 @@ def weibo_layered(df):
 
 @login_required
 def gender_weibo_count(request):
+    _id = request.POST['id']
     conn = link_to_db()
-    df_male = pd.read_sql("select * from user_info where u_sex='男'", conn)
-    df_female = pd.read_sql("select * from user_info where u_sex='女'", conn)
+    table_name = user_table_name(_id, conn)
+    df_male = pd.read_sql("""SELECT * FROM """+ str(table_name) +""" WHERE u_sex='男'""", conn)
+    df_female = pd.read_sql("""SELECT * FROM """+ str(table_name) +""" WHERE u_sex='女'""", conn)
 
     male_result = weibo_layered(df_male)
     female_result = weibo_layered(df_female)
@@ -162,9 +185,11 @@ def follow_layered(df):
 
 @login_required
 def gender_follow_count(request):
+    _id = request.POST['id']
     conn = link_to_db()
-    df_male = pd.read_sql("select * from user_info where u_sex='男'", conn)
-    df_female = pd.read_sql("select * from user_info where u_sex='女'", conn)
+    table_name = user_table_name(_id, conn)
+    df_male = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE u_sex='男'", conn)
+    df_female = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE u_sex='女'", conn)
 
     male_result = follow_layered(df_male)
     female_result = follow_layered(df_female)
@@ -187,9 +212,11 @@ def fans_layered(df):
 
 @login_required
 def gender_fans_count(request):
+    _id = request.POST['id']
     conn = link_to_db()
-    df_male = pd.read_sql("select * from user_info where u_sex='男'", conn)
-    df_female = pd.read_sql("select * from user_info where u_sex='女'", conn)
+    table_name = user_table_name(_id, conn)
+    df_male = pd.read_sql("select * from "+ str(table_name) +" where u_sex='男'", conn)
+    df_female = pd.read_sql("select * from "+ str(table_name) +" where u_sex='女'", conn)
 
     male_result = fans_layered(df_male)
     female_result = fans_layered(df_female)
@@ -201,9 +228,11 @@ def gender_fans_count(request):
 
 @login_required
 def fans_with_weibo(request):
+    _id = request.POST['id']
     conn = link_to_db()
-    df_male = pd.read_sql("select * from user_info where u_sex='男'", conn)
-    df_female = pd.read_sql("select * from user_info where u_sex='女'", conn)
+    table_name = user_table_name(_id, conn)
+    df_male = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE u_sex='男'", conn)
+    df_female = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE u_sex='女'", conn)
 
     male_result = df_male[['u_weibo_count', 'u_fans']]
     female_result = df_female[['u_weibo_count', 'u_fans']]
@@ -247,9 +276,11 @@ def top_six_client(df):
 
 @login_required
 def weibo_compare(request):
+    _id = request.POST['id']
     conn = link_to_db()
-    df_original = pd.read_sql("select * from weibo_info where w_type='原创'", conn)
-    df_transmit = pd.read_sql("select * from weibo_info where w_type='转发'", conn)
+    table_name = weibo_table_name(_id, conn)
+    df_original = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE w_type='原创'", conn)
+    df_transmit = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE w_type='转发'", conn)
 
     original_count = len(df_original)
     transmit_count = len(df_transmit)
@@ -262,8 +293,10 @@ def weibo_compare(request):
 
 @login_required
 def client_compare(request):
+    _id = request.POST['id']
     conn = link_to_db()
-    df = pd.read_sql("select * from weibo_info", conn)
+    table_name = weibo_table_name(_id, conn)
+    df = pd.read_sql("SELECT * FROM "+ str(table_name), conn)
     df_client = df.groupby(['w_client']).size().sort_values(ascending=False)
     df_client_top_ten = df_client[:10]
     count = 0
@@ -280,7 +313,7 @@ def client_compare(request):
 @login_required
 def day_time(request):
     conn = link_to_db()
-    df = pd.read_sql("select * from weibo_info", conn)
+    df = pd.read_sql("SELECT * FROM weibo_info", conn)
     day_time = df.loc[:, ['w_day', 'w_time']]
     result = []
     for i in range(len(day_time)):
@@ -303,10 +336,12 @@ def weibo_day_update(df):
 
 @login_required
 def weibo_update(request):
+    _id = request.POST['id']
     conn = link_to_db()
-    df_sum = pd.read_sql("select * from weibo_info", conn)
-    df_original = pd.read_sql("select * from weibo_info where w_type='原创'", conn)
-    df_transmit = pd.read_sql("select * from weibo_info where w_type='转发'", conn)
+    table_name = weibo_table_name(_id, conn)
+    df_sum = pd.read_sql("SELECT * FROM "+ str(table_name), conn)
+    df_original = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE w_type='原创'", conn)
+    df_transmit = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE w_type='转发'", conn)
 
     sum_update = weibo_day_update(df_sum)
     original_update = weibo_day_update(df_original)
@@ -319,8 +354,10 @@ def weibo_update(request):
 
 @login_required
 def every_day_update(request):
+    _id = request.POST['id']
     conn = link_to_db()
-    df = pd.read_sql('select * from weibo_info', conn)
+    table_name = weibo_table_name(_id, conn)
+    df = pd.read_sql('SELECT * FROM '+ str(table_name), conn)
     df_day = df.groupby(by=['w_day']).size()
     obj = dict()
     result = []
@@ -335,11 +372,13 @@ def every_day_update(request):
 
 @login_required
 def high_word(request):
+    _id = request.POST['id']
     reload(sys)
     sys.setdefaultencoding('utf-8')
     conn = link_to_db()
+    table_name = weibo_table_name(_id, conn)
     cursor = conn.cursor()
-    cursor.execute("SELECT w_content FROM weibo_info")
+    cursor.execute("SELECT w_content FROM "+ str(table_name))
     rows = cursor.fetchall()
     fw = open('weibo.txt', 'w')
     fw.truncate()
@@ -367,11 +406,13 @@ def high_word(request):
 
 @login_required
 def hot_tags(request):
+    _id = request.POST['id']
     reload(sys)
     sys.setdefaultencoding('utf-8')
     conn = link_to_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT u_tags FROM user_info")
+    table_name = user_table_name(_id, conn)
+    cursor.execute("SELECT u_tags FROM "+ str(table_name))
     rows = cursor.fetchall()
     fw = open('tags.txt', 'w')
     fw.truncate()
