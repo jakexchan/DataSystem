@@ -11,10 +11,11 @@ class SpiderOptions(models.Model):
     cookies_SUHB = models.CharField(max_length=255)
     cookies_SUB = models.CharField(max_length=255)
     cookies_gsid_CTandWM = models.CharField(max_length=255)
-    strat_url = models.CharField(max_length=255)
     keyword = models.CharField(max_length=255)
     strat_page = models.IntegerField(blank=True)
     stop_page = models.IntegerField(blank=True)
+    user_table_name = models.CharField(max_length=255)
+    weibo_table_name = models.CharField(max_length=255)
     user_id = models.IntegerField(blank=True, null=True)
 
     class Meta:

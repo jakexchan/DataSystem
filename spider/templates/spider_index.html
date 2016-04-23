@@ -25,13 +25,6 @@
         <li class='divider'></li>
         <li>
             <div class="input-group">
-                <span class="input-group-addon">URL</span>
-                <input type="text" class="form-control option" placeholder="URL" id="url" disabled="true">
-            </div>
-        </li>
-        <li class='divider'></li>
-        <li>
-            <div class="input-group">
                 <span class="input-group-addon">Keyword</span>
                 <input type="text" class="form-control option" placeholder="Keyword" id="keyword" disabled="true">
             </div>
@@ -85,6 +78,8 @@
         </li>
         <li class='divider'></li>
         <button type='button' id='save-option'>Save Options</button>
+        <button type='button' id='submit-option'>Create Options</button>
+        <button type='button' id='cancel'>Cancel</button>
     </ul>
     <div class='col-md-5 action-box'>
         <h4>My Options</h4>
@@ -94,6 +89,7 @@
             {% endfor %}
         </select>
         <button type='button' id='get-option'>Read Options</button>
+        <button type='button' id='create-option'>Create Options</button>
         <button type='button' id='edit-option'>Edit Options</button>
         <button type='button' id='begin-crawl'>Begin Crawl</button>
 

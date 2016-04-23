@@ -29,6 +29,62 @@
         }
     });
 
+    $('#create-option').on('click', function(){
+        $('.option').each(function(){
+            $(this).val('');
+            $(this).attr('disabled', false);
+        });
+        $('#save-option').css('display', 'none');
+        $('#submit-option').css('display', 'block');
+        $('#cancel').css('display', 'block');
+    });
+
+
+    $('#submit-option').on('click', function(){
+        var optionsName = $('#options-name').val(),
+            keyword = $('#keyword').val(),
+            delay = $('#download-delay').val(),
+            beginPage = $('#begin-page-num').val(),
+            endPage = $('#end-page-num').val(),
+            t_wm = $('#_T_WM').val(),
+            suhb = $('#SUHB').val(),
+            sub = $('#SUB').val(),
+            gsid_CTandWM = $('#gsid_CTandWM').val(),
+            user_id = $("#user").attr('index');
+        $.ajax({
+            url: '/create_options/',
+            type: 'POST',
+            data: {
+                'optionsName': optionsName,
+                'keyword': keyword,
+                'delay': delay,
+                'beginPage': beginPage,
+                'endPage': endPage,
+                't_wm': t_wm,
+                'suhb': suhb,
+                'sub': sub,
+                'gsid_CTandWM': gsid_CTandWM,
+                'user_id': user_id
+            },
+            success: function(response){
+                if( response === 'True' ){
+                    $('#msg').html('');
+                    $('#msg').append('<p>Save Success!</p>');
+                    $('#msg-modal').modal('show');
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 1000);
+                }else{
+                    $('#msg').html('');
+                    $('#msg').append('<p>Save Fail!</p>');
+                    $('#msg-modal').modal('show');
+                }
+                
+            }
+        });
+
+    });
+
     $('#get-option').on('click', function(){
         $.ajax({
             url: '/get_options/',
@@ -40,7 +96,6 @@
             success: function(response){
                 $('#options-name').val(response.option_name);
                 $('#options-name').attr('title', response._id);
-                $('#url').val(response.url);
                 $('#keyword').val(response.keyword);
                 $('#download-delay').val(response.delay);
                 $('#begin-page-num').val(response.begin_page);
@@ -57,13 +112,23 @@
         $('.option').each(function(){
             $(this).attr('disabled', false);
         });
+        $('#submit-option').css('display', 'none');
         $('#save-option').css('display', 'block');
+        $('#cancel').css('display', 'block');
+    });
+
+    $('#cancel').on('click', function(){
+        $('.option').each(function(){
+            $(this).attr('disabled', true);
+        });
+        $('#save-option').css('display', 'none');
+        $('#submit-option').css('display', 'none');
+        $('#cancel').css('display', 'none');
     });
 
     $('#save-option').on('click', function(){
         var _id = $('#options-name').attr('title'),
             optionsName = $('#options-name').val(),
-            url = $("#url").val(),
             keyword = $('#keyword').val(),
             delay = $('#download-delay').val(),
             beginPage = $('#begin-page-num').val(),
@@ -80,7 +145,6 @@
             data: {
                 '_id': _id,
                 'optionsName': optionsName,
-                'url': url,
                 'keyword': keyword,
                 'delay': delay,
                 'beginPage': beginPage,
@@ -93,9 +157,11 @@
             },
             success: function(response){
                 if( response === 'True' ){
+                    $('#msg').html('');
                     $('#msg').append('<p>Save Success!</p>');
                     $('#msg-modal').modal('show');
                 }else{
+                    $('#msg').html('');
                     $('#msg').append('<p>Save Fail!</p>');
                     $('#msg-modal').modal('show');
                 }
@@ -103,6 +169,7 @@
                     $(this).attr('disabled', true);
                 });
                 $('#save-option').css('display', 'none');
+                $('#cancel').css('display', 'none');
             }
         });
     });
@@ -127,29 +194,13 @@
     }
 
     $('#begin-crawl').on('click', function(){
-        var url = $("#url").val(),
-            keyword = $('#keyword').val(),
-            delay = $('#download-delay').val(),
-            beginPage = $('#begin-page-num').val(),
-            endPage = $('#end-page-num').val(),
-            t_wm = $('#_T_WM').val(),
-            suhb = $('#SUHB').val(),
-            sub = $('#SUB').val(),
-            gsid_CTandWM = $('#gsid_CTandWM').val();
+        var _id = $('#options-name').attr('title');
 
         $.ajax({
             url: '/crawl/',
             type: 'POST',
             data: {
-                'url': url,
-                'keyword': keyword,
-                'delay': delay,
-                'beginPage': beginPage,
-                'endPage': endPage,
-                't_wm': t_wm,
-                'suhb': suhb,
-                'sub': sub,
-                'gsid_CTandWM': gsid_CTandWM,
+                '_id': _id,
             },
             success: function(response){
                 $('#crawl-status-box').show();

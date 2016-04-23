@@ -8,6 +8,7 @@ from django.conf import settings
 import MySQLdb
 import subprocess
 import json
+import time
 # Create your views here.
 
 child = None
@@ -31,11 +32,70 @@ def spider_index(request):
     return render(request, 'spider_index.html', { 'rows': rows })
 
 
+def create_options(request):
+    if request.method == 'POST':
+        options_name = request.POST['optionsName']
+        keyword = request.POST['keyword']
+        delay = request.POST['delay']
+        beginPage = request.POST['beginPage']
+        endPage = request.POST['endPage']
+        t_wm = request.POST['t_wm']
+        suhb = request.POST['suhb']
+        sub = request.POST['sub']
+        gsid_CTandWM = request.POST['gsid_CTandWM']
+        user_id = request.POST['user_id']
+
+        #Get time
+        t = str(time.time()).replace('.', '')
+        user_table = 'user' + t
+        weibo_table = 'weibo' + t
+
+        conn = lint_to_db()
+        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+
+        try:
+            cursor.execute("""INSERT INTO spider_options(option_name, keyword, delay, begin_page, end_page, user_id, cookies_T_WM, cookies_SUHB, cookies_SUB, cookies_gsid_CTandWM, user_table_name, weibo_table_name)
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (options_name, keyword, int(delay), int(beginPage), int(endPage), int(user_id), t_wm, suhb, sub, gsid_CTandWM, user_table, weibo_table))
+            cursor.execute("""CREATE TABLE """ + user_table +"""(
+                  _id INT NOT NULL AUTO_INCREMENT,
+                  u_id VARCHAR(50) NOT NULL UNIQUE,
+                  u_name VARCHAR(100),
+                  u_weibo_count INT,
+                  u_following INT,
+                  u_fans INT,
+                  u_sex VARCHAR(10),
+                  u_region VARCHAR(50),
+                  u_birthday VARCHAR(20),
+                  u_introduction TEXT,
+                  u_tags VARCHAR(100),
+                  u_school TEXT,
+                  PRIMARY KEY (_id)
+                )ENGINE=MyISAM DEFAULT CHARSET=utf8;""")
+            cursor.execute("""CREATE TABLE """ + weibo_table + """(
+                  _id INT NOT NULL AUTO_INCREMENT,
+                  u_id VARCHAR(50) NOT NULL,
+                  w_content TEXT,
+                  w_type VARCHAR(20),
+                  w_day DATE,
+                  w_time TIME,
+                  w_client VARCHAR(100),
+                  PRIMARY KEY (_id)
+                )ENGINE=MyISAM DEFAULT CHARSET=utf8;""")
+            conn.commit()
+            result = True
+        except:
+            result = False
+            conn.rollback()
+
+        conn.close()
+        return HttpResponse(result)
+
+
 def save(request):
     if request.method == 'POST':
         _id = request.POST['_id']
         options_name = request.POST['optionsName']
-        url = request.POST['url']
         keyword = request.POST['keyword']
         delay = request.POST['delay']
         beginPage = request.POST['beginPage']
@@ -51,31 +111,15 @@ def save(request):
         conn = lint_to_db()
 
         cursor = conn.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("""SELECT * FROM spider_options
-            WHERE _id = %s""", [int(_id)])
-        row = cursor.fetchone()
-        print row
-        import pdb; pdb.set_trace()
-        if row is None:      
-            try:
-                cursor.execute("""INSERT INTO spider_options(option_name, url, keyword, delay, begin_page, end_page, cookies_T_WM, cookies_SUHB, cookies_SUB, cookies_gsid_CTandWM, user_id) 
-                    VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """, (options_name, url, keyword, int(delay), int(beginPage), int(endPage), t_wm, suhb, sub, gsid_CTandWM, int(user_id)))
-                result = True
-                conn.commit()
-            except:
-                result = False
-                conn.rollback()
-        else:
-            try:
-                cursor.execute("""UPDATE spider_options s
-                    SET s.option_name=%s, s.url=%s, s.keyword=%s, s.delay=%s, s.begin_page=%s, s.end_page=%s, s.cookies_T_WM=%s, s.cookies_SUHB=%s, s.cookies_SUB=%s, s.cookies_gsid_CTandWM=%s
-                    WHERE s._id=%s""", (options_name, url, keyword, int(delay), int(beginPage), int(endPage), t_wm, suhb, sub, gsid_CTandWM, _id))
-                result = True
-                conn.commit()
-            except:
-                result = False
-                conn.rollback()
+        try:
+            cursor.execute("""UPDATE spider_options s
+                SET s.option_name=%s, s.keyword=%s, s.delay=%s, s.begin_page=%s, s.end_page=%s, s.cookies_T_WM=%s, s.cookies_SUHB=%s, s.cookies_SUB=%s, s.cookies_gsid_CTandWM=%s
+                WHERE s._id=%s""", (options_name, keyword, int(delay), int(beginPage), int(endPage), t_wm, suhb, sub, gsid_CTandWM, _id))
+            result = True
+            conn.commit()
+        except:
+            result = False
+            conn.rollback()
 
         conn.close()
         return HttpResponse(result)
@@ -100,23 +144,22 @@ def get_options(request):
 def crawl(request):
     global child
     if request.method == 'POST':
-        url = request.POST['url']
-        keyword = request.POST['keyword']
-        delay = request.POST['delay']
-        begin_page = request.POST['beginPage']
-        end_page = request.POST['endPage']
-        t_wm = request.POST['t_wm']
-        suhb = request.POST['suhb']
-        sub = request.POST['sub']
-        gsid_CTandWM = request.POST['gsid_CTandWM']
+        _id = request.POST['_id']
 
-        options = {'url': url, 'keyword': keyword, 'delay': delay, 'begin_page': begin_page, 'end_page': end_page, 't_wm': t_wm, 'suhb': suhb, 'sub': sub, 'gsid_CTandWM': gsid_CTandWM}
+        conn = lint_to_db()
+        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("""SELECT * FROM spider_options
+            WHERE _id = %s""", [int(_id)])
+        row = cursor.fetchone()
+        cursor.close()
+        print row
+        options = {'user_table_name': row['user_table_name'], 'weibo_table_name': row['weibo_table_name'], 'keyword': row['keyword'], 'delay': row['delay'], 'begin_page': row['begin_page'], 'end_page': row['end_page'], 't_wm': row['cookies_T_WM'], 'suhb': row['cookies_SUHB'], 'sub': row['cookies_SUB'], 'gsid_CTandWM': row['cookies_gsid_CTandWM']}
         fw = open('/tmp/options.json', 'w')
         fw.truncate()
         fw.write(json.dumps(options))
         fw.close()
         #cd ../weibo_crawler/weibo_crawler && scrapy crawl weibo
-        child = subprocess.Popen('ping -c4 www.baidu.com', shell=True)
+        child = subprocess.Popen('cd ../weibo_crawler/weibo_crawler && scrapy crawl weibo', shell=True)
         child.poll()
     return HttpResponse(child.returncode)
 

@@ -24,6 +24,7 @@ from spider import views as spider_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^spider/$', spider_views.spider_index),
+    url(r'^create_options/$', spider_views.create_options, name='create_options'),
     url(r'^get_options/$', spider_views.get_options, name='get_options'),
     url(r'^save/$', spider_views.save, name='save'),
     url(r'^crawl/$', spider_views.crawl, name='crawl'),

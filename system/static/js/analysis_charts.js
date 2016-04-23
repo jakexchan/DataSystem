@@ -941,8 +941,8 @@
                             formatter : function (params) {
                                 if (params.value.length > 1) {
                                     return params.seriesName + ' :<br/>'
-                                       + '微博数:' + params.value[0] + '<br/>'
-                                       + '粉丝数:' + params.value[1];
+                                       + '粉丝数:' + params.value[0] + '<br/>'
+                                       + '微博数:' + params.value[1];
                                 }
                                 else {
                                     return params.seriesName + ' :<br/>'

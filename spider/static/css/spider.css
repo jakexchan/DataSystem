@@ -19,7 +19,7 @@
 #select-options{
     width: 160px;
 }
-#get-option, #edit-option, #begin-crawl, #stop-crawl{
+#get-option,#create-option, #edit-option, #begin-crawl, #stop-crawl{
     display: block;
     width: 120px;
     height: 40px;
@@ -35,6 +35,12 @@
 }
 #get-option:hover{
     background-color: #9E9E9E;
+}
+#create-option{
+    background-color: #8B6914;
+}
+#create-option:hover{
+    background-color: #8B5A00;
 }
 #edit-option{
     background-color: #6495ED;
@@ -61,7 +67,7 @@
     margin: 0 auto;
     margin-top: 20px;
 }
-#save-option{
+#save-option, #submit-option, #cancel{
     display: none;
     margin: 0 auto;
     width: 200px;
@@ -71,10 +77,18 @@
     font-weight: bold;
     color: #fff;
     margin-bottom: 8px;
+}
+#save-option, #submit-option{
     background-color: #CD950C;
 }
-#save-option:hover{
+#save-option:hover, #submit-option:hover{
     background-color: #CD8500;
+}
+#cancel{
+    background-color: #CD3333;
+}
+#cancel:hover{
+    background-color: #CD2626;
 }
 #msg p {
     text-align: center;
