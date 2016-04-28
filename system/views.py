@@ -387,7 +387,7 @@ def high_word(request):
         fw.write('\n')
     fw.close()
     content = open('weibo.txt', 'r').read()
-    # tags = jieba.analyse.extract_tags(content, topK=10)
+
     words = [ word for word in jieba.cut(content, cut_all=True) if len(word) >= 2 ]
     result = dict()
     for word in words:

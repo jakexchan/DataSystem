@@ -138,6 +138,10 @@
                 ec.setOption(option);
             }
         });
+
+        ec.on('click', function(params){
+            console.log(params)
+        });
     }); //Gender ratio charts end
 
     //微博数量比较

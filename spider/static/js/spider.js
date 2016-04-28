@@ -186,7 +186,7 @@
                 url: '/process_status/',
                 type: 'POST',
                 success: function(response){
-                    console.log(response);
+
                     if( parseInt(response) === 0 || response !== 'None'){
                         $('.status-msg').html('<div class=\'running-tips font-red\'>Spider is stoped!</div>');
                         $('.stop-btn-box').hide();
