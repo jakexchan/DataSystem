@@ -154,7 +154,6 @@ def crawl(request):
             WHERE id = %s""", [int(_id)])
         row = cursor.fetchone()
         cursor.close()
-        print row
         options = {'user_table_name': row['user_table_name'], 'weibo_table_name': row['weibo_table_name'], 'keyword': row['keyword'], 'delay': row['delay'], 'begin_page': row['begin_page'], 'end_page': row['end_page'], 't_wm': row['cookies_T_WM'], 'suhb': row['cookies_SUHB'], 'sub': row['cookies_SUB'], 'gsid_CTandWM': row['cookies_gsid_CTandWM']}
         fw = open('/tmp/options.json', 'w')
         fw.truncate()

@@ -140,7 +140,29 @@
         });
 
         ec.on('click', function(params){
-            console.log(params)
+            var projectName = $('#select-project').val(),
+                genderValue = params.name;
+
+            $.ajax({
+                url: '/gender_result/',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'project_name': projectName,
+                    'gender_value': genderValue
+                },
+                success: function(response){
+                    console.log(response);
+                    $('#userModal').modal('show');
+                    setTimeout(function(){
+                        $('#user-table').bootstrapTable({
+                            data: response
+                        })
+                    },500);
+                    
+                    
+                }
+            })
         });
     }); //Gender ratio charts end
 

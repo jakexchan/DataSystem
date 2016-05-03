@@ -5,6 +5,7 @@
 {% block title %}Data Analusis -Data Exploer{% endblock %}
 
 {% block style %}
+    <link href="http://cdn.bootcss.com/bootstrap-table/1.10.1/bootstrap-table.min.css" rel="stylesheet">
     <link href="{% static "css/analysis.css" %}" rel="stylesheet">
     <link href="{% static "css/jqcloud.min.css" %}" rel="stylesheet">
 {% endblock%}
@@ -63,12 +64,42 @@
         </div>
     </div>
 
+    <!-- Large modal -->
+    <div class='container'>
+        <div class='panel panel-default'>
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+        </div>
+    </div>
+          <table id="user-table">
+              <thead>
+                <tr>
+                    <th data-field="u_id">微博ID号</th>
+                    <th data-field="u_name">微博昵称</th>
+                    <th data-field="u_weibo_count">发布微博数</th>
+                    <th data-field="u_following">关注数</th>
+                    <th data-field="u_fans">粉丝数</th>
+                    <th data-field="u_sex">性别</th>
+                    <th data-field="u_birthday">生日</th>
+                    <th data-field="u_introduction">简介</th>
+                    <th data-field="u_tags">标签</th>
+                    <th data-field="u_school">学校经历</th>
+                </tr>
+              </thead>
+          </table>    
+          
+        </div>
+      </div>
+    </div>
+     <!-- Large modal end -->
 {% endblock %}
 
 {% block script %}
     <script src="{% static "js/echarts.min.js" %}"></script>
     <script src="{% static "js/vintage.js" %}"></script>
     <script src="{% static "js/dark.js" %}"></script>
+    <script src="http://cdn.bootcss.com/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
     <script src="{% static "js/analysis_animate.js" %}"></script>
     <script src="{% static "js/echarts_example.js" %}"></script>
     <script src="{% static "js/analysis_charts.js" %}"></script>

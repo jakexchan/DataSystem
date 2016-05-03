@@ -20,6 +20,8 @@ from system import admin_views as system_admin_views
 from django.conf import settings
 from django.conf.urls.static import static
 from spider import views as spider_views
+from system import dataview as data_view
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -51,4 +53,5 @@ urlpatterns = [
     url(r'^high_word/$',  system_views.high_word, name='high_word'),
     url(r'^hot_tags/$',  system_views.hot_tags, name='hot_tags'),
     url(r'^manage/user/$',  system_admin_views.user, name='user'),
+    url(r'^gender_result/$',  data_view.gender, name='gender'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
