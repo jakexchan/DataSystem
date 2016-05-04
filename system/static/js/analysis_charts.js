@@ -143,26 +143,11 @@
             var projectName = $('#select-project').val(),
                 genderValue = params.name;
 
-            $.ajax({
-                url: '/gender_result/',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    'project_name': projectName,
-                    'gender_value': genderValue
-                },
-                success: function(response){
-                    console.log(response);
-                    $('#userModal').modal('show');
-                    setTimeout(function(){
-                        $('#user-table').bootstrapTable({
-                            data: response
-                        })
-                    },500);
-                    
-                    
-                }
-            })
+            var aElement = $("<a href=\"\/gender_result\/" + projectName + "/" + genderValue + "/\"" + "target=\"_blank\"></a>").get(0);
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            aElement.dispatchEvent(e);
+
         });
     }); //Gender ratio charts end
 
@@ -265,6 +250,17 @@
                 ec.setOption(option);
             }
         });
+
+        ec.on('click', function(params){
+            console.log(params);
+            var projectName = $('#select-project').val(),
+                genderValue = params.seriesName,
+                num = params.name;
+            var aElement = $("<a href=\"\/weibo_count\/" + projectName + "/" + genderValue + "/" + num +"/\"" + "target=\"_blank\"></a>").get(0);
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            aElement.dispatchEvent(e);
+        });
     });
 
     //关注数量比较
@@ -366,6 +362,16 @@
                 ec.setOption(option);
             }
         });
+        ec.on('click', function(params){
+            console.log(params);
+            var projectName = $('#select-project').val(),
+                genderValue = params.seriesName,
+                num = params.name;
+            var aElement = $("<a href=\"\/weibo_count\/" + projectName + "/" + genderValue + "/" + num +"/\"" + "target=\"_blank\"></a>").get(0);
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            aElement.dispatchEvent(e);
+        });
     });
 
     //粉丝数量比较
@@ -466,6 +472,16 @@
 
                 ec.setOption(option);
             }
+        });
+        ec.on('click', function(params){
+            console.log(params);
+            var projectName = $('#select-project').val(),
+                genderValue = params.seriesName,
+                num = params.name;
+            var aElement = $("<a href=\"\/weibo_count\/" + projectName + "/" + genderValue + "/" + num +"/\"" + "target=\"_blank\"></a>").get(0);
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            aElement.dispatchEvent(e);
         });
     });
 

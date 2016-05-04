@@ -1,0 +1,56 @@
+{% extends 'share/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Data Views -Data Exploer{% endblock %}
+
+{% block style %}
+    <link href="http://cdn.bootcss.com/bootstrap-table/1.10.1/bootstrap-table.min.css" rel="stylesheet">
+{% endblock%}
+
+
+{% block content %}
+    <div class='container' style="margin-top:20px;">
+        <div class='panel panel-default'>
+            <div class="panel-heading">
+                <h3 class="panel-title">User Information Datas</h3>
+            </div>
+            <table data-toggle="table" data-height="540" data-pagination="true">
+              <thead>
+                <tr>
+                    <th data-field="u_id">微博ID号</th>
+                    <th data-field="u_name">微博昵称</th>
+                    <th data-field="u_weibo_count">发布微博数</th>
+                    <th data-field="u_following">关注数</th>
+                    <th data-field="u_fans">粉丝数</th>
+                    <th data-field="u_sex">性别</th>
+                    <th data-field="u_birthday">生日</th>
+                    <th data-field="u_introduction">简介</th>
+                    <th data-field="u_tags">标签</th>
+                    <th data-field="u_school">学校经历</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {% for item in result%}
+                  <tr>
+                      <td>{{ item.u_id }}</td>
+                      <td>{{ item.u_name }}</td>
+                      <td>{{ item.u_weibo_count }}</td>
+                      <td>{{ item.u_following }}</td>
+                      <td>{{ item.u_fans }}</td>
+                      <td>{{ item.u_sex }}</td>
+                      <td>{{ item.u_birthday }}</td>
+                      <td>{{ item.u_introduction }}</td>
+                      <td>{{ item.u_tags }}</td>
+                      <td>{{ item.u_school }}</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script src="http://cdn.bootcss.com/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+{% endblock %}

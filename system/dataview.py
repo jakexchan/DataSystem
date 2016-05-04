@@ -18,10 +18,8 @@ def link_to_db():
     conn = MySQLdb.connect(host=db_arg['HOST'], port=int(db_arg['PORT']), user=db_arg['USER'], passwd=db_arg['PASSWORD'], db=db_arg['NAME'], charset='utf8')
     return conn
 
-def gender(request):
-    if request.method == 'POST':
-        project_name = request.POST['project_name']
-        gender_value = request.POST['gender_value']
+def gender(request, project_name, gender_value):
+    if request.method == 'GET':
         conn = link_to_db()
         cursor = conn.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("""SELECT user_table_name FROM spider_options
@@ -30,7 +28,21 @@ def gender(request):
         cursor.execute("""SELECT * FROM """ + table_name['user_table_name'] + """
             WHERE u_sex = %s""", [gender_value])
         result = cursor.fetchall()
-        print result
         conn.close()
-    return HttpResponse(json.dumps(result, ensure_ascii=False))
+    return render(request, 'dataview.html', { 'result': result })
 
+def weibo_count(request, project_name, gender_value,number):
+    if request.method == 'GET':
+        num = number.split('-')
+        min_num = num[0]
+        max_num = num[1]
+        conn = link_to_db()
+        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("""SELECT user_table_name FROM spider_options
+            WHERE id = %s""", [project_name])
+        table_name = cursor.fetchone()
+        cursor.execute("""SELECT * FROM """ + table_name['user_table_name'] + """
+            WHERE u_sex = %s AND u_weibo_count > %s AND u_weibo_count < %s""", [gender_value, min_num, max_num])
+        result = cursor.fetchall()
+        conn.close()
+    return render(request, 'dataview.html', { 'result': result })

@@ -53,5 +53,6 @@ urlpatterns = [
     url(r'^high_word/$',  system_views.high_word, name='high_word'),
     url(r'^hot_tags/$',  system_views.hot_tags, name='hot_tags'),
     url(r'^manage/user/$',  system_admin_views.user, name='user'),
-    url(r'^gender_result/$',  data_view.gender, name='gender'),
+    url(r'^gender_result/(.+)/(.+)/$',  data_view.gender, name='gender'),
+    url(r'^weibo_count/(.+)/(.+)/(.+)/$',  data_view.weibo_count, name='weibo_count'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
