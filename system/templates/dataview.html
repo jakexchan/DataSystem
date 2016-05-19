@@ -48,6 +48,39 @@
             </table>
         </div>
     </div>
+    {% if flag %}
+    <div class='container' style="margin-top:10px;">
+        <div class='panel panel-default'>
+            <div class="panel-heading">
+                <h3 class="panel-title">Weibo Information Datas</h3>
+            </div>
+            <table data-toggle="table" data-height="540">
+              <thead>
+                <tr>
+                    <th data-field="u_id">微博ID号</th>
+                    <th data-field="w_content">微博内容</th>
+                    <th data-field="w_type">微博类型</th>
+                    <th data-field="w_day">发布日期</th>
+                    <th data-field="w_time">发布时间</th>
+                    <th data-field="w_client">发布客户端</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {% for item in weibo_result %}
+                  <tr>
+                      <td>{{ item.u_id }}</td>
+                      <td>{{ item.w_content }}</td>
+                      <td>{{ item.w_type }}</td>
+                      <td>{{ item.w_day }}</td>
+                      <td>{{ item.w_time }}</td>
+                      <td>{{ item.w_client }}</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 
 

@@ -252,7 +252,6 @@
         });
 
         ec.on('click', function(params){
-            console.log(params);
             var projectName = $('#select-project').val(),
                 genderValue = params.seriesName,
                 num = params.name;
@@ -363,7 +362,6 @@
             }
         });
         ec.on('click', function(params){
-            console.log(params);
             var projectName = $('#select-project').val(),
                 genderValue = params.seriesName,
                 num = params.name;
@@ -474,7 +472,6 @@
             }
         });
         ec.on('click', function(params){
-            console.log(params);
             var projectName = $('#select-project').val(),
                 genderValue = params.seriesName,
                 num = params.name;
@@ -1100,7 +1097,18 @@
                             {
                                 name:'女性',
                                 type:'scatter',
-                                data: datas['女'],
+                                //data: datas['女'],
+                                data: function(){
+                                    var list = [];
+                                    for (var i = 0; i < datas['女'].length; i++){
+                                        var obj = new Object();
+                                        obj.name = datas['女'][i][0];
+                                        obj.value = [datas['女'][i][1], datas['女'][i][2]];
+                                        list.push(obj);
+                                        obj = null;
+                                    }
+                                    return list;
+                                }(),
                                 markPoint : {
                                     data : [
                                         {type : 'max', name: '最大值'},
@@ -1116,7 +1124,18 @@
                             {
                                 name:'男性',
                                 type:'scatter',
-                                data: datas['男'],
+                                //data: datas['男'],
+                                data: function(){
+                                    var list = [];
+                                    for (var i = 0; i < datas['男'].length; i++){
+                                        var obj = new Object();
+                                        obj.name = datas['男'][i][0];
+                                        obj.value = [datas['男'][i][1], datas['男'][i][2]];
+                                        list.push(obj);
+                                        obj = null;
+                                    }
+                                    return list;
+                                }(),
                                 markPoint : {
                                     data : [
                                         {type : 'max', name: '最大值'},
@@ -1135,6 +1154,14 @@
                 ec.hideLoading();
                 ec.setOption(option);
             }
+        });
+        ec.on('click', function(params){
+            var projectName = $('#select-project').val(),
+                id = params.name;
+            var aElement = $("<a href=\"\/person_info\/" + projectName + "/" + id + "/\"" + "target=\"_blank\"></a>").get(0);
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            aElement.dispatchEvent(e);
         });
     });
 

@@ -53,8 +53,7 @@ def registe(request):
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
         cursor = connection.cursor()
-        cursor.execute("""SELECT id
-            FROM auth_user
+        cursor.execute("""SELECT id FROM auth_user
             WHERE username=%s""", [username])
         row = cursor.fetchone()
         cursor.execute("""INSERT INTO user_profile(profile, user_id)
@@ -108,9 +107,11 @@ def link_to_db():
 
 @login_required
 def analysis(request):
+    _id = request.user.id
     conn = link_to_db()
     cursor = conn.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("""SELECT * FROM spider_options""")
+    cursor.execute("""SELECT * FROM spider_options
+        WHERE user_id=%s""", [_id])
     rows = cursor.fetchall()
     conn.close()
     return render(request, 'analysis.html', {"rows": rows})
@@ -234,16 +235,16 @@ def fans_with_weibo(request):
     df_male = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE u_sex='男'", conn)
     df_female = pd.read_sql("SELECT * FROM "+ str(table_name) +" WHERE u_sex='女'", conn)
 
-    male_result = df_male[['u_weibo_count', 'u_fans']]
-    female_result = df_female[['u_weibo_count', 'u_fans']]
+    male_result = df_male[['_id', 'u_weibo_count', 'u_fans']]
+    female_result = df_female[['_id', 'u_weibo_count', 'u_fans']]
 
     male_datas = []
     female_datas = []
     for male_index, male_row in male_result.iterrows():
-        male_datas.append([male_row['u_fans'], male_row['u_weibo_count']])
+        male_datas.append([male_row['_id'], male_row['u_fans'], male_row['u_weibo_count']])
 
     for female_index, female_row in female_result.iterrows():
-        female_datas.append([female_row['u_fans'], female_row['u_weibo_count']])
+        female_datas.append([female_row['_id'], female_row['u_fans'], female_row['u_weibo_count']])
 
     result = {'男': male_datas, '女': female_datas}
     conn.close()

@@ -55,4 +55,5 @@ urlpatterns = [
     url(r'^manage/user/$',  system_admin_views.user, name='user'),
     url(r'^gender_result/(.+)/(.+)/$',  data_view.gender, name='gender'),
     url(r'^weibo_count/(.+)/(.+)/(.+)/$',  data_view.weibo_count, name='weibo_count'),
+    url(r'^person_info/(.+)/(.+)/$',  data_view.person_info, name='person_info'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

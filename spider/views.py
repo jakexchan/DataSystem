@@ -175,5 +175,6 @@ def process_status(request):
 def stop_crawl(request):
     global child
     if request.method == 'POST':
-        child.kill()
+        child.terminate() # 终止子进程
+        #child.kill()
         return HttpResponse(child.returncode)
